@@ -1,9 +1,21 @@
+<?php
+$iklan = $wpdb->get_var("SELECT COUNT(member_id) FROM wp_aads WHERE member_id='" . $_SESSION['member'] . "'")
+?>
+
 <div class="col-md-12">
     <div class="content-utama">
         <div class="info-diri  d-md-flex p-4 align-items-center justify-content-between">
             <div class="d-md-flex align-items-center">
                 <div class="mr-4">
-                    <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo];" ?>" alt="" class="img-profile-md">
+                    <?php
+                    if ($_SESSION['photo'] != "") {
+                    ?>
+                        <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo];" ?>" alt="" class="img-profile-md">
+                    <?php
+                    } else {
+                        echo "<div class='default-img mb-4'><i class='far fa-user'></i></div>";
+                    }
+                    ?>
                 </div>
                 <div>
                     <h1 class="f-18 bold-md"><?= $user['nama']; ?></h1>
@@ -19,15 +31,15 @@
             </div>
             <div class="text-secondary d-flex">
                 <div class="count-profile">
-                    <h2>23</h2>
+                    <h2><?= $iklan; ?></h2>
                     Iklan Terbit
                 </div>
                 <div class="count-profile">
-                    <h2>35</h2>
+                    <h2>0</h2>
                     Iklan Favorit
                 </div>
                 <div class="count-profile">
-                    <h2>35</h2>
+                    <h2>0</h2>
                     Item Terjual
                 </div>
             </div>

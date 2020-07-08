@@ -2,6 +2,12 @@
 session_start();
 date_default_timezone_set('Asia/Jakarta');
 
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
+
+remove_action('admin_print_scripts', 'print_emoji_detection_script');
+remove_action('admin_print_styles', 'print_emoji_styles');
+
 function load_file()
 {
     wp_enqueue_style('style', get_stylesheet_uri());
@@ -9,14 +15,13 @@ function load_file()
     wp_enqueue_style('owl-theme', get_template_directory_uri() . '/assets/dist/assets/owl.theme.default.min.css', array(), '1.1', 'all');
     wp_enqueue_style('owl-carousel', get_template_directory_uri() . '/assets/dist/assets/owl.carousel.min.css', array(), '1.1', 'all');
     wp_enqueue_script('owl-carousel-min', get_template_directory_uri() . '/assets/dist/owl.carousel.min.js', array('jquery'), 1.1, true);
-    wp_enqueue_script('chained', get_template_directory_uri() . '/assets/js/jquery-chained.min.js', array('jquery'), 1.1, true);
 }
 
 add_action('wp_enqueue_scripts', 'load_file');
 
-$data = file_get_contents('https://dev.farizdotid.com/api/daerahindonesia/provinsi');
-$provinsi = json_decode($data, true);
-$provinsi = $provinsi["provinsi"];
+// $data = file_get_contents('https://dev.farizdotid.com/api/daerahindonesia/provinsi');
+// $provinsi = json_decode($data, true);
+// $provinsi = $provinsi["provinsi"];
 
 
 function time_ago($timestamp)
@@ -439,8 +444,19 @@ function use_voucher($use, $id)
     }
 }
 
+function cek_input($data)
+{
+
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
 function register($nama, $email, $password, $telp)
 {
+
+
     global $wpdb;
     $date = date('Y-m-d H:i:s');
     $table = "wp_members";
@@ -533,6 +549,59 @@ function updateprofile()
             header('location:setting/?status=1');
         } else {
             header('location:setting/?status=0');
+        }
+        $wpdb->close();
+    }
+}
+
+
+function tawar()
+{
+    if (isset($_POST['tawar'])) {
+        $tawar = "Hello, saya menawar iklannya anda pada harga Rp. " . $_POST['tawar'] . ". Jika berkenan mohon membalas pesan ini";
+        global $wpdb;
+        $date = date('Y-m-d H:i:s');
+        $table = "wp_chat";
+        $data  = array(
+            'receiver_id'   => $_POST['member'],
+            'send_id'       => $_SESSION['id_member'],
+            'add_id'        => $_POST['iklan'],
+            'message'       => $tawar,
+            'status_chat'   => "N",
+            'type_chat'     => "buyer",
+            'chat_at'       => $date
+        );
+        $cek = $wpdb->insert($table, $data, $format);
+
+        if ($cek) {
+            header('location:view/?id=' . $_POST['iklan'] . '&status=1');
+        } else {
+            header('location:view/?id=' . $_POST['iklan'] . '&status=0');
+        }
+        $wpdb->close();
+    }
+}
+function pesanchat()
+{
+    if (isset($_POST['pesan'])) {
+        global $wpdb;
+        $date = date('Y-m-d H:i:s');
+        $table = "wp_chat";
+        $data  = array(
+            'receiver_id'   => $_POST['member'],
+            'send_id'       => $_SESSION['id_member'],
+            'add_id'        => $_POST['iklan'],
+            'message'       => $_POST['pesan'],
+            'status_chat'   => "N",
+            'type_chat'     => "buyer",
+            'chat_at'       => $date
+        );
+        $cek = $wpdb->insert($table, $data, $format);
+
+        if ($cek) {
+            header('location:view/?id=' . $_POST['iklan'] . '&status=1');
+        } else {
+            header('location:view/?id=' . $_POST['iklan'] . '&status=0');
         }
         $wpdb->close();
     }

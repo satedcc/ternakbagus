@@ -59,6 +59,53 @@ a.iklan-bottom {
     object-fit: cover;
 }
 
+.default-img {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background: #ececec;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    padding: 10px;
+    color: #2980b9;
+    margin: 0 auto;
+    font-size: 60px;
+}
+
+.default-img-md {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background: #ececec;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    padding: 10px;
+    color: #2980b9;
+    margin: 0 auto;
+    font-size: 30px;
+}
+
+.default-img-sm {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background: #ececec;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    padding: 10px;
+    color: #2980b9;
+    margin: 0 auto;
+    font-size: 20px;
+    margin-right: 10px;
+    border: 4px solid #ffffff;
+}
+
 .f-12 {
     font-size: 12px;
 }

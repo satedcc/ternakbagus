@@ -32,7 +32,7 @@ if (isset($_SESSION['id'])) {
                         <div class="dashboard-head">
                             <ul>
                                 <li><a href="../ternak">Iklan Ternak</a></li>
-                                <li><a href="../iklan-perlengkapan" class="active">Iklan Perlengkapan</a></li>
+                                <li><a href="../perlengkapan" class="active">Iklan Perlengkapan</a></li>
                                 <li><a href="../layanan">Iklan Jasa</a></li>
                             </ul>
                         </div>
@@ -96,15 +96,56 @@ if (isset($_SESSION['id'])) {
                                         </div>
                                     </div>
                                     <div class="form-input">
-                                        <label for="" class="bold-sm m-0 my-2">Lokasi *</label>
+                                        <label for="" class="bold-sm m-0 my-2">Provensi *</label>
                                         <div class="input-text">
-                                            <select name="lokasi" id="">
-                                                <option value="">Lokasi Ternak</option>
+                                            <!--provinsi-->
+                                            <select id="provinsi" class="form-control" name="provinsi">
+                                                <option value="">Please Select</option>
                                                 <?php
-                                                foreach ($provinsi as $p) {
-                                                    echo "<option value='$p[id]'>$p[nama]</option>";
-                                                }
-                                                ?>
+                                                $prov = $wpdb->get_results("SELECT * FROM provinsi ORDER BY nama", ARRAY_A);
+                                                foreach ($prov as $p) { ?>
+
+                                                    <option value="<?php echo $p['id_prov']; ?>">
+                                                        <?php echo $p['nama']; ?>
+                                                    </option>
+
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="" class="bold-sm m-0 my-2">Kabupaten *</label>
+                                        <div class="input-text">
+                                            <!--Kabupaten-->
+                                            <select id="kota" class="form-control" name="kota">
+                                                <option value="">Please Select</option>
+                                                <?php
+                                                $query = $wpdb->get_results("SELECT kabupaten.nama AS nama_kab, provinsi.id_prov, kabupaten.id_kab FROM kabupaten INNER JOIN provinsi ON kabupaten.id_prov = provinsi.id_prov order by nama_kab", ARRAY_A);
+                                                foreach ($query as $row) { ?>
+
+                                                    <option id="kota" class="<?php echo $row['id_prov']; ?>" value="<?php echo $row['id_kab']; ?>">
+                                                        <?php echo $row['nama_kab']; ?>
+                                                    </option>
+
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="" class="bold-sm m-0 my-2">Kabupaten *</label>
+                                        <div class="input-text">
+                                            <!--Kabupaten-->
+                                            <select id="kecamatan" class="form-control" name="lokasi">
+                                                <option value="">Please Select</option>
+                                                <?php
+                                                $query = $wpdb->get_results("SELECT kecamatan.nama AS nama_kec, kabupaten.id_kab, kecamatan.id_kec FROM kecamatan INNER JOIN kabupaten ON kecamatan.id_kab = kabupaten.id_kab order by nama_kec", ARRAY_A);
+                                                foreach ($query as $row) { ?>
+
+                                                    <option id="kecamatan" class="<?php echo $row['id_kab']; ?>" value="<?php echo $row['id_kec']; ?>">
+                                                        <?php echo $row['nama_kec']; ?>
+                                                    </option>
+
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     </div>

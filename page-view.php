@@ -9,6 +9,11 @@ if (isset($_SESSION['id'])) {
                                     LEFT JOIN wp_subs ON wp_aads.sub_id=wp_subs.sub_id
                                     LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id
                                     WHERE  add_id='" . $_GET['id'] . "'", ARRAY_A);
+    if ($_POST['btn-tawar'] != "") {
+        tawar();
+    } else {
+        pesanchat();
+    }
     get_header();
 
 ?>
@@ -142,7 +147,16 @@ if (isset($_SESSION['id'])) {
                         </div>
                         <div class="d-flex my-3 align-items-center">
                             <div>
-                                <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo]" ?>" alt="<?= $ads['nama']; ?>" class="img-desc mr-3">
+                                <?php
+                                if ($ads['photo']) {
+
+                                ?>
+                                    <img src="../wp-content/uploads/<?php echo "$ads[slug_nama]/$ads[photo]" ?>" alt="<?= $ads['nama']; ?>" class="img-desc mr-3">
+                                <?php
+                                } else {
+                                    echo "<div class='default-img mb-4'><i class='far fa-user'></i></div>";
+                                }
+                                ?>
                             </div>
                             <div>
                                 <h1 class="f-18 bold-md"><?= $ads['nama']; ?></h1>
@@ -174,16 +188,20 @@ if (isset($_SESSION['id'])) {
                         <div class="custom-header">
                             <img src="https://image.flaticon.com/icons/svg/3135/3135667.svg" alt="">
                         </div>
-                        <div class="custom-body text-center">
-                            <h1 class="f-big bold-md">Selamat</h1>
-                            <p>Anda akan langsung menawar iklan pada harga</p>
-                            <input type="number" class="mb-3" placeholder="masukkan penawaran anda">
-                            <p>Tawar harga tidak mengikat. Anda tetap di rekomendasikan untuk bertemu dan melihat langsung barang yang di jual sebelum ada kesepakatan</p>
-                        </div>
-                        <div class="custom-footer text-center mb-4">
-                            <button type="button" class="btn btn-primary">Tawar Harga</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        </div>
+                        <form action="" method="post">
+                            <div class="custom-body text-center">
+                                <h1 class="f-big bold-md">Selamat</h1>
+                                <p>Anda akan langsung menawar iklan pada harga</p>
+                                <input type="text" name="member" value="<?= $ads['member_id']; ?>" hidden>
+                                <input type="text" name="iklan" value="<?= $ads['add_id']; ?>" hidden>
+                                <input type="number" name="tawar" class="mb-3" placeholder="masukkan penawaran anda">
+                                <p>Tawar harga tidak mengikat. Anda tetap di rekomendasikan untuk bertemu dan melihat langsung barang yang di jual sebelum ada kesepakatan</p>
+                            </div>
+                            <div class="custom-footer text-center mb-4">
+                                <button type="submit" class="btn btn-primary" name="btn-tawar" value="btn-tawar">Tawar Harga</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -196,14 +214,18 @@ if (isset($_SESSION['id'])) {
                         <div class="custom-header">
                             <img src="https://image.flaticon.com/icons/svg/941/941565.svg" alt="">
                         </div>
-                        <div class="custom-body">
-                            <p>Silahkan kirim pesan ke <span class="bold-md"><?= $ads['nama']; ?></span> untuk menanyakan iklan</p>
-                            <textarea name="" placeholder="tuliskan pesan anda"></textarea>
-                        </div>
-                        <div class="custom-footer px-3 mb-4">
-                            <button type="button" class="btn btn-info">Kirim Pesan</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        </div>
+                        <form action="" method="post">
+                            <div class="custom-body">
+                                <p>Silahkan kirim pesan ke <span class="bold-md"><?= $ads['nama']; ?></span> untuk menanyakan iklan</p>
+                                <input type="text" name="member" value="<?= $ads['member_id']; ?>" hidden>
+                                <input type="text" name="iklan" value="<?= $ads['add_id']; ?>" hidden>
+                                <textarea name="pesan" placeholder="tuliskan pesan anda"></textarea>
+                            </div>
+                            <div class="custom-footer px-3 mb-4">
+                                <button type="submit" class="btn btn-info" name="btn-pesan" value="btn-pesan">Kirim Pesan</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

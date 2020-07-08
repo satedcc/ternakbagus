@@ -34,7 +34,7 @@
 
 <body>
     <header>
-        <a href="dashboard/" class="iklan-bottom">
+        <a href="ternak/" class="iklan-bottom">
             <i class="far fa-bell mr-2"></i>PASANG IKLAN
         </a>
         <div class="topbar">
@@ -71,7 +71,7 @@
                                             <?php
                                             if ($qty > 0) {
                                             ?>
-                                                <a href="" class="f-12 link">Pesan Terbaru (<?= $qty; ?>)</a>
+                                                <a href="inbox/" class="f-12 link">Pesan Terbaru (<?= $qty; ?>)</a>
                                                 <hr class="m-0">
                                                 <?php
 
@@ -99,7 +99,7 @@
                                                 }
                                                 ?>
 
-                                                <a href="" class="f-12 link">Lihat Semua Pesan</a>
+                                                <a href="inbox/" class="f-12 link">Lihat Semua Pesan</a>
                                         </div>
                                     <?php
                                             } else {
@@ -175,7 +175,16 @@
                                                 <a href="setting/">
                                                     <div class="d-flex my-3">
                                                         <div>
-                                                            <img src="<?php echo get_site_url(); ?>/wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo]" ?>" alt="" class="img-profile-sm mr-2">
+                                                            <?php
+                                                            if ($_SESSION['photo'] != "") {
+                                                            ?>
+                                                                <img src="<?php echo get_site_url(); ?>/wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo]" ?>" alt="" class="img-profile-sm mr-2">
+
+                                                            <?php
+                                                            } else {
+                                                                echo "<div class='default-img-md mr-3'><i class='far fa-user'></i></div>";
+                                                            }
+                                                            ?>
                                                         </div>
                                                         <div>
                                                             Hay,
@@ -186,9 +195,9 @@
                                                 </a>
                                                 <hr class="m-0">
                                             </li>
-                                            <li><a href="detail/"><i class="far fa-ad mr-2"></i>Iklan Anda</a></li>
-                                            <li><a href="voucher/"><i class="far fa-tag mr-2"></i>Beli Voucher</a></li>
-                                            <li><a href="logout"><i class="far fa-power-off mr-2"></i>Logout</a></li>
+                                            <li><a href="setting/"><i class="far fa-heart mr-3"></i>Setting</a></li>
+                                            <li><a href="gant-password/"><i class="far fa-tag mr-3"></i>Ganti password</a></li>
+                                            <li><a href="logout"><i class="far fa-power-off mr-3"></i>Logout</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -227,7 +236,7 @@
                             global $wpdb;
                             $kategori = $wpdb->get_results("SELECT * FROM wp_kategories ORDER BY kategori_id ASC", ARRAY_A);
                             foreach ($kategori as $k) {
-                                echo "<li><a href=''>$k[kategori]</a></li>";
+                                echo "<li><a href='kategori/?idkategori=$k[kategori_id]'>$k[kategori]</a></li>";
                             }
 
                             ?>

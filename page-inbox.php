@@ -23,7 +23,15 @@ if (isset($_SESSION['id'])) {
                         <div class="menu-inbox">
                             <a href="inbox/?receiver=<?= $c['receiver_id']; ?>&sender=<?= $c['send_id']; ?>&iklan=<?= $c['add_id']; ?>" class="content-main d-flex align-items-center<?= $class; ?>">
                                 <div>
-                                    <img src="https://midone.left4code.com/dist/images/profile-3.jpg" alt="" class="img-inbox mr-2">
+                                    <?php
+                                    if ($c['photo'] != "") {
+                                    ?>
+                                        <img src="../wp-content/uploads/<?php echo "$c[slug_nama]/$c[photo]"; ?>" alt="" class="img-inbox mr-2">
+                                    <?php
+                                    } else {
+                                        echo "<div class='default-img-sm mb-4'><i class='far fa-user'></i></div>";
+                                    }
+                                    ?>
                                 </div>
                                 <div class="list-message">
                                     <h1 class="f-14 m-0 bold-md"><?= $c['nama']; ?></h1>

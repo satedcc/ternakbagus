@@ -15,6 +15,7 @@ if (isset($_POST) && $_POST['email'] != '' && $_POST['password'] != '') {
         $_SESSION['member'] = $result->member_id;
         $_SESSION['photo']  = $result->photo;
         $_SESSION['tgl']    = $result->create_at;
+        $_SESSION['id_member']    = $result->member_id;
         header("Location: ternakbagus/dashboard");
         exit();
     } else {

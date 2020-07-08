@@ -49,7 +49,16 @@ if (isset($_SESSION['id'])) {
                     <form action="" method="post" enctype="multipart/form-data">
                         <div class="content-utama p-4 d-md-flex">
                             <div class="mr-4 bg-light p-3 uploads">
-                                <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo];" ?>" alt="">
+                                <?php
+                                if ($_SESSION['photo'] != "") {
+                                ?>
+                                    <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo];" ?>" alt="">
+
+                                <?php
+                                } else {
+                                    echo "<div class='default-img mb-4'><i class='far fa-user'></i></div>";
+                                }
+                                ?>
                                 <label for="photo"><i class="far fa-camera-alt mr-3"></i>Upload Foto</label>
                                 <input type="file" name="photo" id="photo">
                                 <p class="f-12">Besar file: maksimum 10.000.000 bytes (10 Megabytes)
