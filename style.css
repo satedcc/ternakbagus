@@ -490,6 +490,10 @@ a.iklan-bottom {
     color: white;
 }
 
+.logo img {
+    width: 180px;
+}
+
 /* MENU */
 .menu-main {
     background: #f4f6ff;
@@ -1130,6 +1134,13 @@ footer .title-footer::before {
     .content-utama .replay {
         width: 100% !important;
     }
+
+    .voucher-package {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 }
 
 
@@ -1235,7 +1246,8 @@ footer .title-footer::before {
 
 
 /* common */
-.ribbon {
+.ribbon,
+.promo-ribbon {
     width: 150px;
     height: 150px;
     overflow: hidden;
@@ -1243,7 +1255,9 @@ footer .title-footer::before {
 }
 
 .ribbon::before,
-.ribbon::after {
+.ribbon::after,
+.promo-ribbon::before,
+.promo-ribbon::after {
     position: absolute;
     z-index: -1;
     content: '';
@@ -1251,7 +1265,8 @@ footer .title-footer::before {
     border: 5px solid #2980b9;
 }
 
-.ribbon span {
+.ribbon span,
+.promo-ribbon span {
     position: absolute;
     display: block;
     width: 225px;
@@ -1263,6 +1278,18 @@ footer .title-footer::before {
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
     text-transform: uppercase;
     text-align: center;
+}
+
+.right-ribbon {
+    top: 0;
+    left: 0;
+}
+
+.right-ribbon span {
+    right: -60px;
+    top: 20px;
+    transform: rotate(45deg);
+    font-size: 14px;
 }
 
 /* top left*/
@@ -1293,50 +1320,7 @@ footer .title-footer::before {
     transform: rotate(-45deg);
 }
 
-.pembayaran {
-    position: relative;
-    margin: 20px 0;
-    display: flex;
-    justify-content: space-between;
-}
 
-.pembayaran input[type="radio"] {
-    display: none;
-}
-
-.pembayaran h2 {
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 20px;
-    margin: 5px 0;
-}
-
-.pembayaran label {
-    box-shadow: inset 0px 1px 0px 0px #ffffff;
-    background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
-    background-color: #ffffff;
-    border-radius: 5px;
-    border: 1px solid #dcdcdc;
-    display: inline-block;
-    cursor: pointer;
-    color: #666666;
-    font-family: "Poppins", sans-serif;
-    padding: 20px 24px;
-    text-decoration: none;
-    width: 100%;
-}
-
-.pembayaran input[type="radio"]:checked+label {
-    box-shadow: 0px 1px 0px 0px #f0f7fa;
-    background: linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);
-    background-color: #33bdef;
-    border: 1px solid #057fd0;
-    display: inline-block;
-    cursor: pointer;
-    text-decoration: none;
-    text-shadow: 0 1px 1px #000000;
-    color: #ffffff;
-}
 
 .voucher-input {
     text-align: right;
@@ -1794,4 +1778,78 @@ ul.menu-profile a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.voucher-package {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.voucher-package div {
+    flex: 1;
+    margin: 5px;
+    position: relative;
+}
+
+
+
+.voucher-package input[type="radio"] {
+    display: none;
+}
+
+.voucher-package label {
+    cursor: pointer;
+    display: block;
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid #ececec;
+    height: 160px;
+    transition: .5s;
+}
+
+.voucher-package label::before {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background: #ffffff;
+    top: 10px;
+    left: 10px;
+    border-radius: 100%;
+    border: 2px solid #2980b9;
+    transition: .5s;
+}
+
+.voucher-package input[type="radio"]:checked+label {
+    background: linear-gradient(135deg, #0FF0B3 0%, #036ED9 100%);
+    color: white;
+    transform: scale(1.05);
+}
+
+.voucher-package input[type="radio"]:checked+label::before {
+    background: linear-gradient(135deg, #0FF0B3 0%, #036ED9 100%);
+    border: 3px solid #FFF;
+}
+
+.voucher-package input[type="radio"]:checked+label {}
+
+.voucher-package ul {
+    font-size: 12px;
+}
+
+.voucher-package ul li::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: normal;
+    margin-right: 10px;
+}
+
+.confirm {
+    background: linear-gradient(135deg, #5b247a 0%, #1bcedf 100%);
+    padding: 30px 0;
+    border-radius: 5px;
+    text-align: center;
+    margin: 20px 0;
+    color: white;
 }

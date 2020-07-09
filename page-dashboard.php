@@ -32,18 +32,54 @@ if (isset($_SESSION['id'])) {
                     <h1 class="f-18 bold-md mb-3">Cari Ternak</h1>
                     <div class="content-utama p-3 d-md-flex justify-content-between align-items-center">
                         <div class="cari w-100 mr-2">
-                            <select name="lokasi" id="" class="form-control">
-                                <option value="">Lokasi Ternak</option>
+                            <label for="">Provinsi</label>
+                            <select id="provinsi" class="form-control" name="provinsi">
+                                <option value="">provinsi</option>
                                 <?php
-                                foreach ($provinsi as $p) {
-                                    echo "<option value='$p[id]'>$p[nama]</option>";
-                                }
-                                ?>
+                                $prov = $wpdb->get_results("SELECT * FROM provinsi ORDER BY nama", ARRAY_A);
+                                foreach ($prov as $p) { ?>
+
+                                    <option value="<?php echo $p['id_prov']; ?>">
+                                        <?php echo $p['nama']; ?>
+                                    </option>
+
+                                <?php } ?>
                             </select>
                         </div>
                         <div class="cari w-100 mr-2">
+                            <label for="">Kabupaten</label>
+                            <select id="kota" class="form-control" name="kota">
+                                <option value="">kabupaten</option>
+                                <?php
+                                $query = $wpdb->get_results("SELECT kabupaten.nama AS nama_kab, provinsi.id_prov, kabupaten.id_kab FROM kabupaten INNER JOIN provinsi ON kabupaten.id_prov = provinsi.id_prov order by nama_kab", ARRAY_A);
+                                foreach ($query as $row) { ?>
+
+                                    <option id="kota" class="<?php echo $row['id_prov']; ?>" value="<?php echo $row['id_kab']; ?>">
+                                        <?php echo $row['nama_kab']; ?>
+                                    </option>
+
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="cari w-100 mr-2">
+                            <label for="">Kecamatan</label>
+                            <select id="kecamatan" class="form-control" name="lokasi">
+                                <option value="">kecamatan</option>
+                                <?php
+                                $query = $wpdb->get_results("SELECT kecamatan.nama AS nama_kec, kabupaten.id_kab, kecamatan.id_kec FROM kecamatan INNER JOIN kabupaten ON kecamatan.id_kab = kabupaten.id_kab order by nama_kec", ARRAY_A);
+                                foreach ($query as $row) { ?>
+
+                                    <option id="kecamatan" class="<?php echo $row['id_kab']; ?>" value="<?php echo $row['id_kec']; ?>">
+                                        <?php echo $row['nama_kec']; ?>
+                                    </option>
+
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="cari w-100 mr-2">
+                            <label for="">Kategori</label>
                             <select id="kategori" class="form-control" name="kategori">
-                                <option value="">Kategori Ternak</option>
+                                <option value="">Kategori</option>
                                 <?php
                                 $kategori = $wpdb->get_results("SELECT * FROM wp_kategories ORDER BY kategori_id ASC", ARRAY_A);
                                 foreach ($kategori as $k) {
@@ -52,8 +88,9 @@ if (isset($_SESSION['id'])) {
                             </select>
                         </div>
                         <div class="cari w-100 mr-2">
+                            <label for="">Jenis</label>
                             <select id="subs" class="form-control" name="jenis">
-                                <option value="">Ternak Jenis</option>
+                                <option value="">Jenis</option>
                                 <?php
                                 $subs = $wpdb->get_results("SELECT * FROM wp_subs INNER JOIN wp_kategories ON wp_subs.kategori_id = wp_kategories.kategori_id", ARRAY_A);
                                 foreach ($subs as $s) {
@@ -63,6 +100,7 @@ if (isset($_SESSION['id'])) {
                             </select>
                         </div>
                         <div class="cari w-50 mr-2">
+                            <label for="">&nbsp;</label>
                             <button class="myButton block w-100 p-2">Cari</button>
                         </div>
                     </div>

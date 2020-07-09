@@ -9,6 +9,10 @@ if (isset($_SESSION['id'])) {
                                     LEFT JOIN wp_subs ON wp_aads.sub_id=wp_subs.sub_id
                                     LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id
                                     WHERE  add_id='" . $_GET['id'] . "'", ARRAY_A);
+
+    $lokasi = $wpdb->get_row("SELECT id_prov,id_kab,id_kec, provinsi.nama AS nama_prov, kabupaten.nama AS nama_kab, kecamatan.nama AS nama_kec FROM provinsi LEFT JOIN kabupaten using (id_prov) 
+                                    LEFT JOIN kecamatan USING (id_kab)
+                                WHERE id_kec='" . $ads['lokasi'] . "'", ARRAY_A);
     if ($_POST['btn-tawar'] != "") {
         tawar();
     } else {
@@ -130,7 +134,7 @@ if (isset($_SESSION['id'])) {
                         <h1 class="bold-xl f-30">Rp. <?= format_rupiah($ads['harga']); ?></h1>
                         <h2 class="text-secondary f-18 mb-4"><?= $ads['judul']; ?></h2>
                         <div class="d-flex justify-content-between f-12">
-                            <div><i class="far fa-map-marker-alt mr-2"></i>Kambu, Kendari</div>
+                            <div><i class="far fa-map-marker-alt mr-2"></i><?php echo "$lokasi[nama_kab],$lokasi[nama_kec]"; ?></div>
                             <div><?= time_ago($ads['ads_create']); ?></div>
                         </div>
                     </div>

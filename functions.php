@@ -606,3 +606,51 @@ function pesanchat()
         $wpdb->close();
     }
 }
+
+
+function randomString($length)
+{
+    $str        = "";
+    $characters = '1234567890';
+    $max        = strlen($characters) - 1;
+    for ($i = 0; $i < $length; $i++) {
+        $rand = mt_rand(0, $max);
+        $str .= $characters[$rand];
+    }
+    return $str;
+}
+
+function konfirmasi()
+{
+    $nama_file      = $_FILES['bukti']['name'];
+    $ukuran_file    = $_FILES['bukti']['size'];
+    $tipe_file      = $_FILES['bukti']['type'];
+    $tmp_file       = $_FILES['bukti']['tmp_name'];
+    $path           = "wp-content/uploads/" . $_SESSION['slug'] . "/" . $nama_file;
+    global $wpdb;
+    $date           = date('Y-m-d H:i:s');
+    $table          = "wp_konfirmasi";
+    if (move_uploaded_file($tmp_file, $path)) {
+        $data           = array(
+            'nama_pembeli'      => $_POST['nama'],
+            'asal'              => $_POST['asal'],
+            'tujuan'            => $_POST['tujuan'],
+            'jumlah_bayar'      => $_POST['jumlah'],
+            'keterangan'        => $_POST['keterangan'],
+            'v_id'              => $_POST['voucher_id'],
+            'konf_status'       => "N",
+            'bukti_bayar'       => $nama_file,
+            'konf_at'           => $date
+        );
+        $cek = $wpdb->insert($table, $data, $format);
+
+        if ($cek) {
+            echo "<script>alert('Berhasil $nama_file')</script>";
+        } else {
+            echo "<script>alert('gagal')</script>";
+        }
+        $wpdb->close();
+    } else {
+        echo "<script>alert('gagal upload')</script>";
+    }
+}

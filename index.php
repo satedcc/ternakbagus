@@ -60,11 +60,11 @@ get_header();
 
         if (!isset($_SESSION['id'])) {
         ?>
+
             <div class="login-front">
                 <form action="" method="post">
-                    <div class="ribbon-login">
-                        <h1 class="f-14 m-0">PROMO</h1>
-                        <span>Join Member</span>
+                    <div class="promo-ribbon right-ribbon">
+                        <span>PROMO<br>Join Member</span>
                     </div>
                     <h2 class="f-18 bold-md mt-4">Ingin jual ternak dengan cepat ?</h2>
                     <div class="iklan-button my-3">

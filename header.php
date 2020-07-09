@@ -42,9 +42,10 @@
                 <div class="row justify-content-between align-items-center">
                     <div class="col-md-3">
                         <div class="logo">
-                            <a href="">
+                            <!-- <a href="">
                                 <h1>Ternak<span>Bagus</span></h1>
-                            </a>
+                            </a> -->
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="">
                         </div>
                     </div>
                     <div class="col-md-6 text-center">
@@ -56,22 +57,25 @@
                     <div class="col-md-3">
                         <?php
                         if (isset($_SESSION['id'])) {
+                            $qty = $wpdb->get_var("SELECT COUNT(*) FROM wp_notif WHERE member_id='" . $_SESSION['member'] . "' AND baca='Unread'");
+                            $qty_chat = $wpdb->get_var("SELECT COUNT(*) FROM wp_chat WHERE receiver_id='" . $_SESSION['member'] . "' AND status_chat='N' AND type_chat='buyer'");
                         ?>
                             <ul class="w-75 float-right">
                                 <li>
                                     <div class="dropdown">
                                         <a type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="far fa-comment-alt-dots f-20"></i>
-                                            <span class="notif_count"></span>
+                                            <?php
+                                            if ($qty_chat > 0) {
+                                                echo "<span class=notif_count></span>";
+                                            }
+                                            ?>
                                         </a>
-                                        <?php
-                                        $qty = $wpdb->get_var("SELECT COUNT(*) FROM wp_chat WHERE receiver_id='" . $_SESSION['member'] . "' AND status_chat='N' AND type_chat='buyer'");
-                                        ?>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <?php
-                                            if ($qty > 0) {
+                                            if ($qty_chat > 0) {
                                             ?>
-                                                <a href="inbox/" class="f-12 link">Pesan Terbaru (<?= $qty; ?>)</a>
+                                                <a href="inbox/" class="f-12 link">Pesan Terbaru (<?= $qty_chat; ?>)</a>
                                                 <hr class="m-0">
                                                 <?php
 
@@ -118,11 +122,13 @@
                                     <div class="dropdown">
                                         <a href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="far fa-bell f-20"></i>
-                                            <span class="notif_count"></span>
+                                            <?php
+                                            if ($qty > 0) {
+                                                echo "<span class=notif_count></span>";
+                                            }
+                                            ?>
                                         </a>
-                                        <?php
-                                        $qty = $wpdb->get_var("SELECT COUNT(*) FROM wp_notif WHERE member_id='" . $_SESSION['member'] . "' AND baca='Unread'");
-                                        ?>
+
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <?php
                                             if ($qty > 0) {

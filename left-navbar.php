@@ -30,6 +30,7 @@
                 <li><a href="inbox/"><i class="far fa-inbox mr-3"></i>Inbox</a></li>
                 <li><a href="detail/"><i class="far fa-store-alt mr-3"></i>Iklan Anda</a></li>
                 <li><a href="favorit/"><i class="far fa-heart mr-3"></i>Iklan Favorit</a></li>
+                <li><a href="voucher/"><i class="far fa-tag mr-3"></i>Beli Voucher</a></li>
                 <li><a href="logout/"><i class="far fa-sign-out-alt mr-3"></i>Keluar</a></li>
             </ul>
         </div>

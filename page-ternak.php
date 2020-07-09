@@ -149,7 +149,7 @@ if (isset($_SESSION['id'])) {
                                         </div>
                                     </div>
                                     <div class="form-input">
-                                        <label for="" class="bold-sm m-0 my-2">Kabupaten *</label>
+                                        <label for="" class="bold-sm m-0 my-2">Kecamatan *</label>
                                         <div class="input-text">
                                             <!--Kabupaten-->
                                             <select id="kecamatan" class="form-control" name="lokasi">
