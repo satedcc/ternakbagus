@@ -1,7 +1,7 @@
 <?php
 session_start();
 $sid = session_id();
-get_header();
+
 
 if (isset($_SESSION['id'])) {
     $result = $wpdb->get_results("SELECT * FROM wp_vouchers WHERE member_id='" . $_SESSION['member'] . "' ORDER BY v_id DESC", ARRAY_A);
@@ -10,7 +10,7 @@ if (isset($_SESSION['id'])) {
     if (isset($_POST['btn-konfirmasi'])) {
         konfirmasi();
     }
-
+    get_header();
 ?>
 
     <div class="container bars">
@@ -28,12 +28,27 @@ if (isset($_SESSION['id'])) {
             <div class="row">
                 <?php include "left-navbar.php"; ?>
                 <div class="col-md-9">
+                    <?php
+                    if ($_GET['status'] == "1") {
+                        echo "<div class='alert alert-success' role='alert'>
+                            <h2 class='f-18 bold-md'>Data telah tersimpan</h2>
+                            <p>Terima kasih telah melakukan pembayaran untuk voucher dan mohon menunggu konfirmasi dari admin kami untuk melakukan pengecekkan pembayaran anda.
+                                Terima kasih
+                            </p>
+                        </div>";
+                    } elseif ($_GET['status'] == "0") {
+                        echo "<div class='alert alert-danger' role='alert'>
+                            <h2 class='f-18 bold-md'>Data gagal tersimpan</h2>
+                        </div>";
+                    }
+                    ?>
                     <div class="dashboard-content">
                         <div class="dashboard-head">
                             <ul>
                                 <li><a href="../voucher">Voucher Anda</a></li>
                                 <li><a href="../beli">Beli Voucher</a></li>
-                                <li><a href="../history" class="active">History Pembelian</a></li>
+                                <li><a href="../beli">Detail Pembelian</a></li>
+                                <li><a href="../history">History Pembelian</a></li>
                             </ul>
                         </div>
                         <div class="dashboard-body">
@@ -89,7 +104,7 @@ if (isset($_SESSION['id'])) {
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <!-- <h2 class="f-18">ORDER ID: <span class="bold-md">2345</span></h2>
+                                                    <h2 class="f-18">ORDER ID: <span class="bold-md">2345</span></h2>
                                                     <div class="confirm">
                                                         <span>Paket 10</span>
                                                         <h1 class="bold-lg"><sup>Rp</sup> 25.000</h1>
@@ -138,20 +153,21 @@ if (isset($_SESSION['id'])) {
                                                         <div class="col-sm-8">
                                                             <textarea class="form-control form-control-sm" rows="3" name="keterangan"></textarea>
                                                         </div>
-                                                    </div> -->
+                                                    </div>
                                                     <div class="form-group row">
                                                         <label for="staticEmail" class="col-sm-4 col-form-label">Upload File</label>
                                                         <div class="col-sm-8">
-                                                            <input type="file" class="form-control-file form-control-sm" name="bukti">
+                                                            <input type="file" name="file" class="form-control-file">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <input type="text" name="voucher_id" value="<?= $k['v_id']; ?>">
+                                                    <input type="text" name="voucher_id" value="<?= $k['v_id']; ?>" hidden>
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                     <button type="submit" class="btn btn-primary" name="btn-konfirmasi" value="btn-konfirmasi">Konfirmasi Pembayaran</button>
                                                 </div>
                                             </div>
+                                        </form>
                                     </div>
                                 </div>
 

@@ -3,6 +3,26 @@ session_start();
 $sid = session_id();
 
 if (isset($_SESSION['id'])) {
+
+    $promo = $wpdb->get_var("SELECT COUNT(*) FROM wp_vouchers WHERE kode_bayar LIKE '%promo%' AND member_id='" . $_SESSION['member'] . "'");
+
+    if (isset($_POST) && $_POST['klaim'] != "") {
+        $date = date('Y-m-d H:i:s');
+        $table = "wp_vouchers";
+        $data  = array(
+            'member_id'     => $_SESSION['member'],
+            'v_paket'       => "4",
+            'jumlah'        => "4",
+            'kode_bayar'    => "promo",
+            'bank'          => "promo",
+            'status_bayar'  => "1",
+            'create_at'     => $date
+        );
+        $hasil = $wpdb->insert($table, $data, $format);
+        if ($hasil) {
+            header('location:history/');
+        }
+    }
     get_header();
 
 ?>
@@ -22,16 +42,51 @@ if (isset($_SESSION['id'])) {
             <div class="row">
                 <?php include "left-navbar.php"; ?>
                 <div class="col-md-9">
-                    <div class='alert alert-success' role='alert'>
-                        <h1 class='f-18'>Hai <?= $_SESSION['nama'] ?>,</h1>
-                        <p>Selamat datang dan bergabung di ternakbagus.com, sebagai bentuk terima kasih kami kepada anda, kami akan memberikan voucher yang bisa di gunakan untuk beriklan di ternakbagus.com.</p>
-                    </div>
+                    <?php
+                    if ($promo > 0) {
+                    } else {
+                    ?>
+                        <div class='alert alert-success' role='alert'>
+                            <h1 class='f-18'>Hai <?= $_SESSION['nama'] ?>,</h1>
+                            <p>Selamat datang dan bergabung di ternakbagus.com, sebagai bentuk terima kasih kami kepada anda, kami akan memberikan voucher yang bisa di gunakan untuk beriklan di ternakbagus.com.</p>
+                            <form action="" method="post">
+                                <button type="button" class="btn btn-info my-2" data-toggle="modal" data-target="#exampleModal">Klaim Voucher</button>
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="voucher-promo text-center">
+                                                    <h5 class="bold-md f-30 m-0">SELAMAT</h5>
+                                                    <p>Anda mendapatkan promo voucher dengan bernilai</p>
+                                                    <h1 class="display-4 bold-lg">Rp 10.000</h1>
+                                                    4 Voucher
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                                <button type="submit" class="btn btn-primary" name="klaim" value="klaim">Klaim Voucher</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    <?php
+                    }
+                    ?>
                     <div class="dashboard-content">
                         <div class="dashboard-head">
                             <ul>
                                 <li><a href="../voucher">Voucher Anda</a></li>
                                 <li><a href="../beli">Beli Voucher</a></li>
-                                <li><a href="../history" class="active">History Pembelian</a></li>
+                                <li><a href="../beli">Detail Pembelian</a></li>
+                                <li><a href="../history">History Pembelian</a></li>
                             </ul>
                         </div>
                         <div class="dashboard-body">
@@ -41,13 +96,18 @@ if (isset($_SESSION['id'])) {
                                     <div class="ribbon ribbon-top-left"><span>Voucer</span></div>
                                     <div class="voucher">
                                         <div class="item-voucher">
-                                            <p>Selamat bergabung di ternakbagus, sebagai bentuk terima kasih kepada anda
-                                                kami akan memberikan voucher yang bisa di gunakan untuk beriklan di
-                                                ternakbagus</p>
-                                            <h1 class="display-1 bold-xl text-white">10.000</h1>
+                                            <?php
+                                            $row = $wpdb->get_row("SELECT SUM(jumlah) AS total,kode_bayar,member_id FROM wp_vouchers WHERE member_id='" . $_SESSION['member'] . "' AND status_bayar='1'", ARRAY_A);
+                                            $voucher = $row['total'];
+                                            $nilai   = $row['total'] * 2500;
+                                            ?>
+
+                                            <p>Selamat bergabung di ternakbagus, untuk beriklan di ternakbagus.com silahkan membeli voucher yang telah kami siapkan sehingga dapat memudahkan anda untuk beriklan</p>
+                                            <h1 class="display-1 bold-xl text-white"><?= format_rupiah($nilai); ?> </h1>
                                             <hr>
-                                            <span class="font-italic f-12">* Maksimal voucher free 5 kali penggunaan</span>
-                                            <span class="float-right">
+                                            <h5 class="f-18 text-white float-left">Jumlah voucher : <?= $voucher; ?></h5>
+
+                                            <span class="float-right text-secondary">
                                                 <i class="fab fa-facebook-f mr-2"></i>
                                                 <i class="fab fa-instagram mr-2"></i>
                                                 <i class="fab fa-twitter mr-2"></i>
@@ -61,86 +121,15 @@ if (isset($_SESSION['id'])) {
                                                 anda akan
                                                 lebih
                                                 mudah dalam beriklan di ternakbagus.</p>
-                                            <form action="../beli" method="post">
-                                                <button class="btn btn-primary block w-100 my-2">Klaim Voucher</button>
-                                                <button class="btn btn-info block w-100 my-2">Beli Voucher</button>
-                                            </form>
+                                            <a href="../beli/" class="btn btn-info block w-100 my-2">Beli Voucher</a>
                                             <span class="font-italic f-12 d-block">* 1 voucher untuk 1 iklan</span>
-                                            <span class="font-italic f-12">* 1 voucher bernilai Rp.2000</span>
+                                            <span class="font-italic f-12">* 1 voucher bernilai Rp.2500</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h1 class="f-18 bold-md my-3">Beli Voucher</h1>
-                    <form action="../beli/" method="post">
-                        <div class="content-utama p-4">
-                            <h2 class="f-18">Pembelian voucher ternakbagus</h2>
-                            <div class="voucher-package">
-                                <div>
-                                    <input type="radio" name="paket" id="paket" value="1">
-                                    <label for="paket">
-                                        <h3 class="f-14 bold-md">Paket 1</h3>
-                                        <h1 class="bold-xl f-30">Rp. 2.500</h1>
-                                        <ul>
-                                            <li>Masa berlaku 30 hari</li>
-                                        </ul>
-                                    </label>
-                                </div>
-                                <div>
-                                    <input type="radio" name="paket" id="paket-four" value="4">
-                                    <label for="paket-four">
-                                        <h3 class="f-14 bold-md">Paket 4</h3>
-                                        <h1 class="bold-xl f-30">Rp. 10.000</h1>
-                                        <ul>
-                                            <li>Gratis 1 Voucher</li>
-                                            <li>Masa berlaku 30 hari</li>
-                                        </ul>
-                                    </label>
-                                </div>
-                                <div>
-                                    <input type="radio" name="paket" id="paket-ten" value="10">
-                                    <label for="paket-ten">
-                                        <h3 class="f-14 bold-md">Paket 10</h3>
-                                        <h1 class="bold-xl f-30">Rp. 25.000</h1>
-                                        <ul>
-                                            <li>Gratis 3 Voucher</li>
-                                            <li>Masa berlaku 30 hari</li>
-                                        </ul>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="d-md-flex">
-                                <div class="w-100 m-2">
-                                    <span>Metode Pembayaran</span>
-                                    <div>
-                                        <select name="" id="" class="w-100">
-                                            <option value="">Transfer</option>
-                                            <option value="" disabled>Kartu Kredit</option>
-                                            <option value="" disabled>Virtual Bank</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="w-100  m-2">
-                                    <div>
-                                        <span>Pilih Bank</span>
-                                        <div>
-                                            <select id="" class="w-100" name="bank">
-                                                <option value="MANDIRI">BANK MANDIRI - 9000023232</option>
-                                                <option value="BCA">BANK BCA - 9000023232</option>
-                                                <option value="BRI">BANK BNI - 9000023232</option>
-                                                <option value="BNI">BANK BRI - 9000023232</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m-2">
-                                <button class="glow-btn">Bayar Sekarang</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

@@ -50,9 +50,9 @@ if (isset($_SESSION['id'])) {
                         <div class="content-utama p-4 d-md-flex">
                             <div class="mr-4 bg-light p-3 uploads">
                                 <?php
-                                if ($_SESSION['photo'] != "") {
+                                if ($user['photo'] != "") {
                                 ?>
-                                    <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo];" ?>" alt="">
+                                    <img src="../wp-content/uploads/<?php echo "$user[slug_nama]/$user[photo];" ?>" alt="">
 
                                 <?php
                                 } else {

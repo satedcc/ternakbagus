@@ -34,7 +34,7 @@ if (isset($_SESSION['id'])) {
                         <div class="cari w-100 mr-2">
                             <label for="">Provinsi</label>
                             <select id="provinsi" class="form-control" name="provinsi">
-                                <option value="">provinsi</option>
+                                <option value="">Provinsi</option>
                                 <?php
                                 $prov = $wpdb->get_results("SELECT * FROM provinsi ORDER BY nama", ARRAY_A);
                                 foreach ($prov as $p) { ?>
@@ -47,9 +47,9 @@ if (isset($_SESSION['id'])) {
                             </select>
                         </div>
                         <div class="cari w-100 mr-2">
-                            <label for="">Kabupaten</label>
+                            <label for="">Kabupaten/Kota</label>
                             <select id="kota" class="form-control" name="kota">
-                                <option value="">kabupaten</option>
+                                <option value="">Kota/Kab</option>
                                 <?php
                                 $query = $wpdb->get_results("SELECT kabupaten.nama AS nama_kab, provinsi.id_prov, kabupaten.id_kab FROM kabupaten INNER JOIN provinsi ON kabupaten.id_prov = provinsi.id_prov order by nama_kab", ARRAY_A);
                                 foreach ($query as $row) { ?>
@@ -64,7 +64,7 @@ if (isset($_SESSION['id'])) {
                         <div class="cari w-100 mr-2">
                             <label for="">Kecamatan</label>
                             <select id="kecamatan" class="form-control" name="lokasi">
-                                <option value="">kecamatan</option>
+                                <option value="">Kecamatan</option>
                                 <?php
                                 $query = $wpdb->get_results("SELECT kecamatan.nama AS nama_kec, kabupaten.id_kab, kecamatan.id_kec FROM kecamatan INNER JOIN kabupaten ON kecamatan.id_kab = kabupaten.id_kab order by nama_kec", ARRAY_A);
                                 foreach ($query as $row) { ?>

@@ -54,6 +54,9 @@ get_header();
                 <span class="marker6">
                     <img src="wp-content/themes/ternak/assets/img/Asset 1.svg" alt="">
                 </span>
+                <span class="marker7">
+                    <img src="wp-content/themes/ternak/assets/img/Asset 1.svg" alt="">
+                </span>
             </div>
         </div>
         <?php

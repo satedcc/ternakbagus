@@ -33,7 +33,7 @@ if (isset($_SESSION['id'])) {
                                 <h1 class='f-18'>SELAMAT !!</h1>
                                 <p>Iklan anda BERHASIL di buat dan dalam proses MODERASI. Anda akan mendapatkan notifikasi ketika iklan telah aktif.
                                 Kami mendoakan semoga iklan Anda cepat laku.</p>
-                                <a href='' class='myButton'>Preview Iklan Anda</a>
+                                <a href='view/?id=$_GET[id]' target='New' class='myButton'>Preview Iklan Anda</a>
                             </div>";
                     }
                     ?>
@@ -135,20 +135,28 @@ if (isset($_SESSION['id'])) {
                                         <div class="modal-body">
                                             <h1 class="f-18">Mohon di isi alasan untuk menghapus iklan</h1>
                                             <div class="delete f-12">
-                                                <input type="radio" name="alasan" id="alasan">
-                                                <label for="alasan">Terjual di pembeli luar</label>
-                                                <input type="radio" name="alasan" id="alasan1">
-                                                <label for="alasan1">Terjual di pembeli ternakbagus</label>
-                                                <input type="radio" name="alasan" id="alasan2">
-                                                <label for="alasan2">Iklan kurang mendapat tanggapan</label>
-                                                <input type="radio" name="alasan" id="alasan3">
-                                                <label for="alasan3">Alasan lain</label>
+                                                <div>
+                                                    <input type="radio" name="alasan" id="alasan-<?= $r['add_id']; ?>">
+                                                    <label for="alasan-<?= $r['add_id']; ?>">Terjual di pembeli luar</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" name="alasan" id="alasan-1<?= $r['add_id']; ?>">
+                                                    <label for="alasan-1<?= $r['add_id']; ?>">Terjual di pembeli ternakbagus</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" name="alasan" id="alasan-2<?= $r['add_id']; ?>">
+                                                    <label for="alasan-2<?= $r['add_id']; ?>">Iklan kurang mendapat tanggapan</label>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" name="alasan" id="alasan-3<?= $r['add_id']; ?>">
+                                                    <label for="alasan-3<?= $r['add_id']; ?>">Alasan lain</label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             <form action="" method="post">
-                                                <input type="text" name="delete-id" id="" value="<?= $r['add_id']; ?>">
+                                                <input type="text" name="delete-id" id="" value="<?= $r['add_id']; ?>" hidden>
                                                 <button type="submit" class="btn btn-primary"><i class="far fa-trash-alt mr-2"></i>Hapus Iklan</button>
                                             </form>
                                         </div>

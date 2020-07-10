@@ -105,14 +105,14 @@ function textToSlug($text = '')
 
 function iklan_ternak()
 {
-    $nama_file = $_FILES['file']['name'];
-    $ukuran_file = $_FILES['file']['size'];
-    $tipe_file = $_FILES['file']['type'];
-    $tmp_file = $_FILES['file']['tmp_name'];
-    $path = "wp-content/uploads/" . $_SESSION['slug'] . "/" . $nama_file;
+    $nama_file      = $_FILES['file']['name'];
+    $ukuran_file    = $_FILES['file']['size'];
+    $tipe_file      = $_FILES['file']['type'];
+    $tmp_file       = $_FILES['file']['tmp_name'];
+    $path           = "wp-content/uploads/" . $_SESSION['slug'] . "/" . $nama_file;
     global $wpdb;
-    $date = date('Y-m-d H:i:s');
-    $table = "wp_aads";
+    $date           = date('Y-m-d H:i:s');
+    $table          = "wp_aads";
 
     if ($_POST['judul'] != "" && $_POST['harga'] != "") {
         if (move_uploaded_file($tmp_file, $path)) {
@@ -151,10 +151,11 @@ function iklan_ternak()
             );
         }
         $cek = $wpdb->insert($table, $data, $format);
+        $idads = $wpdb->insert_id;
         if ($cek) {
-            header('location:detail/');
+            header('location:../detail/?status=1&id=' . $idads);
         } else {
-            header('location:ternak/');
+            header('location:../detail/?status=0');
         }
     }
 }
@@ -206,7 +207,7 @@ function editternak()
 
     $cek = $wpdb->update($table, $data, $condition);
     if ($cek) {
-        header('location:ternak/?edit=' . $_POST['id'] . '');
+        header('location:detail/?editstatus=1');
     }
 }
 
@@ -622,10 +623,11 @@ function randomString($length)
 
 function konfirmasi()
 {
-    $nama_file      = $_FILES['bukti']['name'];
-    $ukuran_file    = $_FILES['bukti']['size'];
-    $tipe_file      = $_FILES['bukti']['type'];
-    $tmp_file       = $_FILES['bukti']['tmp_name'];
+    ob_start();
+    $nama_file      = $_FILES['file']['name'];
+    $ukuran_file    = $_FILES['file']['size'];
+    $tipe_file      = $_FILES['file']['type'];
+    $tmp_file       = $_FILES['file']['tmp_name'];
     $path           = "wp-content/uploads/" . $_SESSION['slug'] . "/" . $nama_file;
     global $wpdb;
     $date           = date('Y-m-d H:i:s');
@@ -645,12 +647,13 @@ function konfirmasi()
         $cek = $wpdb->insert($table, $data, $format);
 
         if ($cek) {
-            echo "<script>alert('Berhasil $nama_file')</script>";
+            header('location:history/?status=1');
         } else {
-            echo "<script>alert('gagal')</script>";
+            header('location:history/?status=0');
         }
         $wpdb->close();
     } else {
-        echo "<script>alert('gagal upload')</script>";
+        header('location:history/?upload=0');
     }
+    ob_end_flush();
 }

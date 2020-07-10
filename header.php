@@ -29,6 +29,10 @@
         a {
             text-decoration: none;
         }
+
+        a:hover {
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -45,7 +49,9 @@
                             <!-- <a href="">
                                 <h1>Ternak<span>Bagus</span></h1>
                             </a> -->
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="">
+                            <a href="<?php echo get_site_url(); ?>">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="">
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-6 text-center">
@@ -178,7 +184,7 @@
                                     <div class="menu-dropdown-top">
                                         <ul>
                                             <li>
-                                                <a href="setting/">
+                                                <a href="../dashboard/">
                                                     <div class="d-flex my-3">
                                                         <div>
                                                             <?php
@@ -202,7 +208,7 @@
                                                 <hr class="m-0">
                                             </li>
                                             <li><a href="setting/"><i class="far fa-heart mr-3"></i>Setting</a></li>
-                                            <li><a href="gant-password/"><i class="far fa-tag mr-3"></i>Ganti password</a></li>
+                                            <li><a href="ganti-password/"><i class="far fa-tag mr-3"></i>Ganti password</a></li>
                                             <li><a href="logout"><i class="far fa-power-off mr-3"></i>Logout</a></li>
                                         </ul>
                                     </div>

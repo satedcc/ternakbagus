@@ -1,5 +1,6 @@
 <?php
 $iklan = $wpdb->get_var("SELECT COUNT(member_id) FROM wp_aads WHERE member_id='" . $_SESSION['member'] . "'")
+
 ?>
 
 <div class="col-md-12">
@@ -8,9 +9,9 @@ $iklan = $wpdb->get_var("SELECT COUNT(member_id) FROM wp_aads WHERE member_id='"
             <div class="d-md-flex align-items-center">
                 <div class="mr-4">
                     <?php
-                    if ($_SESSION['photo'] != "") {
+                    if ($user['photo'] != "") {
                     ?>
-                        <img src="../wp-content/uploads/<?php echo "$_SESSION[slug]/$_SESSION[photo];" ?>" alt="" class="img-profile-md">
+                        <img src="../wp-content/uploads/<?php echo "$user[slug_nama]/$user[photo];" ?>" alt="" class="img-profile-md">
                     <?php
                     } else {
                         echo "<div class='default-img mb-4'><i class='far fa-user'></i></div>";

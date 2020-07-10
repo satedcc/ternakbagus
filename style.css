@@ -165,10 +165,11 @@ a.iklan-bottom {
 
 .delete label {
     position: relative;
-    border-radius: 5px;
+    border-radius: 2px;
     padding: 5px 10px;
     display: flex;
     align-items: center;
+    transition: .5s;
 }
 
 .delete label::before {
@@ -183,6 +184,8 @@ a.iklan-bottom {
 .delete input[type="radio"]:checked+label {
     background-color: #5eccff;
     color: #FFF;
+    transform: scale(1.1);
+    font-size: 20px;
 }
 
 .delete input[type="radio"]:checked+label::before {
@@ -1010,6 +1013,12 @@ footer .title-footer::before {
 .map .marker6 {
     top: 49%;
     left: 89%;
+    animation-delay: 1s;
+}
+
+.map .marker7 {
+    top: 78%;
+    left: 54%;
     animation-delay: 1s;
 }
 
@@ -1852,4 +1861,11 @@ ul.menu-profile a:hover {
     text-align: center;
     margin: 20px 0;
     color: white;
+}
+
+.voucher-promo {
+    background: linear-gradient(135deg, #5b247a 0%, #1bcedf 100%);
+    padding: 20px 0;
+    color: white;
+    border-radius: 5px;
 }

@@ -96,7 +96,7 @@ if (isset($_SESSION['id'])) {
                                         </div>
                                     </div>
                                     <div class="form-input">
-                                        <label for="" class="bold-sm m-0 my-2">Provensi *</label>
+                                        <label for="" class="bold-sm m-0 my-2">Provinsi *</label>
                                         <div class="input-text">
                                             <!--provinsi-->
                                             <select id="provinsi" class="form-control" name="provinsi">
@@ -161,13 +161,19 @@ if (isset($_SESSION['id'])) {
                                             <input type="text" placeholder="harga" name="harga" required value="<?= $edit['harga']; ?>">
                                         </div>
                                     </div>
+                                    <?php
+                                    if (isset($edit['file'])) {
+                                        echo "<img src='../wp-content/uploads/$edit[slug_nama]/$edit[file]' class='w-25'>";
+                                    }
+                                    ?>
                                     <div class="form-input my-4">
                                         <div class="input-text file">
-                                            <label for="file">
+                                            <label for="imgInp">
                                                 <i class="far fa-images mr-2"></i>
                                                 Upload Foto</label>
-                                            <input type="file" name="file" id="file">
+                                            <input type="file" name="file" id="imgInp">
                                         </div>
+                                        <img id='img-upload' class="mt-3">
                                     </div>
                                     <div class="form-input">
                                         <input type="checkbox" name="tampil"> Tampilkan nomor handphone
@@ -176,12 +182,82 @@ if (isset($_SESSION['id'])) {
                                         <input type="text" name="id" id="" value="<?= $_GET['edit']; ?>" hidden>
                                         <?php
                                         if ($_GET['edit'] != "") {
-                                            echo "<button class='myButton f-24 py-2' name='tombol' value='edit'>EDIT IKLAN</button>";
+                                            echo "<button type='button' class='btn btn-primary' name='tombol' value='edit' data-toggle='modal' data-target='#exampleModalEdit'>Edit Iklan</button>";
                                         } else {
-                                            echo "<button class='myButton f-24 py-2' name='tombol' value='save'>SIMPAN IKLAN</button>";
+                                            echo "<button type='button' class='btn btn-primary'  data-toggle='modal' data-target='#exampleModal'>Pasang Iklan</button>";
                                         }
                                         ?>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <?php
+                                                $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                                if ($voucher > 0) {
+                                                ?>
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Konfirmasi pemasangan iklan</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Anda akan memasang iklan dengan menggunakan 1 voucher dan saldo voucher saat ini <span class="bold-xl"><?= $voucher; ?></span>. Apakah anda yakin untuk memasang iklan ?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary" name='tombol' value='save'>Ya</button>
+
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Konfirmasi pemasangan iklan</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Saldo voucher anda tidak cukup untuk memasang iklan, silahkan membeli voucher terlebih dahulu.
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                            <a href="beli/" type="button" class="btn btn-primary">Beli voucher</a>
+                                                        </div>
+                                                    </div>
+                                                <?php
+                                                }
+                                                ?>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Konfirmasi iklan </h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Apakah iklan akan di edit?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Edit iklan</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
+
                                 </form>
                             </div>
                         </div>
