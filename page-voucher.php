@@ -97,15 +97,16 @@ if (isset($_SESSION['id'])) {
                                     <div class="voucher">
                                         <div class="item-voucher">
                                             <?php
-                                            $row = $wpdb->get_row("SELECT SUM(jumlah) AS total,kode_bayar,member_id FROM wp_vouchers WHERE member_id='" . $_SESSION['member'] . "' AND status_bayar='1'", ARRAY_A);
-                                            $voucher = $row['total'];
-                                            $nilai   = $row['total'] * 2500;
+                                            $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                            $use = $wpdb->get_var("SELECT SUM(qty) AS total FROM wp_use WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                            $total = $voucher - $use;
+                                            $nilai  = $total * 2500;
                                             ?>
 
                                             <p>Selamat bergabung di ternakbagus, untuk beriklan di ternakbagus.com silahkan membeli voucher yang telah kami siapkan sehingga dapat memudahkan anda untuk beriklan</p>
                                             <h1 class="display-1 bold-xl text-white"><?= format_rupiah($nilai); ?> </h1>
                                             <hr>
-                                            <h5 class="f-18 text-white float-left">Jumlah voucher : <?= $voucher; ?></h5>
+                                            <h5 class="f-18 text-white float-left">Jumlah voucher : <?= $total; ?></h5>
 
                                             <span class="float-right text-secondary">
                                                 <i class="fab fa-facebook-f mr-2"></i>

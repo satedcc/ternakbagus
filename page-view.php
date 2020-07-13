@@ -88,7 +88,10 @@ if (isset($_SESSION['id'])) {
                     <div class="content">
                         <div class="row">
                             <?php
-                            $result = $wpdb->get_results("SELECT member_id,judul,lokasi,harga,file,slug_nama,berat,harga,add_id FROM wp_aads LEFT JOIN wp_members USING(member_id) WHERE kategori_id='" . $ads['kategori_id'] . "' LIMIT 3", ARRAY_A);
+                            $result = $wpdb->get_results("SELECT * FROM wp_aads 
+                            LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id 
+                            LEFT JOIN kecamatan ON wp_aads.lokasi=kecamatan.id_kec 
+                            LIMIT 15", ARRAY_A);
                             foreach ($result as $r) {
                             ?>
                                 <div class="col-md-4 col-6 mb-4">
@@ -98,10 +101,9 @@ if (isset($_SESSION['id'])) {
                                         </div>
                                         <div class="body">
                                             <h2 class="mt-2 f-18 m-0"><?php echo $r['judul']; ?></h2>
-                                            <span class="f-12"><i class="far fa-map-marker-alt text-primary mr-2"></i>Kota
-                                                Surabaya</span>
+                                            <span class="f-12"><i class="far fa-map-marker-alt text-primary mr-2"></i><?php echo $r['nama']; ?></span>
                                             <div class="f-12 py-2 m-0">
-                                                <i class="far fa-badge-check text-success"></i> Tersedia - <span class="bold-sm"><?php echo $r['berat']; ?>kg</span>
+                                                <i class="far fa-badge-check text-success"></i> Tersedia - <span class="bold-sm"><?php echo $r['berat']; ?> kg</span>
                                             </div>
                                             <div class="rating my-3">
                                                 <i class="fas fa-star text-warning"></i>

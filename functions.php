@@ -114,6 +114,8 @@ function iklan_ternak()
     $date           = date('Y-m-d H:i:s');
     $table          = "wp_aads";
 
+    $voucher        = "wp_use";
+
     if ($_POST['judul'] != "" && $_POST['harga'] != "") {
         if (move_uploaded_file($tmp_file, $path)) {
             $data  = array(
@@ -153,6 +155,12 @@ function iklan_ternak()
         $cek = $wpdb->insert($table, $data, $format);
         $idads = $wpdb->insert_id;
         if ($cek) {
+            $data = array(
+                'member_id'         => $_SESSION['member'],
+                'qty'               => 1,
+                'create_use'         => $date
+            );
+            $cekvoucher = $wpdb->insert($voucher, $data, $format);
             header('location:../detail/?status=1&id=' . $idads);
         } else {
             header('location:../detail/?status=0');

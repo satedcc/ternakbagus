@@ -214,7 +214,10 @@ if (isset($_SESSION['id'])) {
                                             <div class="modal-dialog">
                                                 <?php
                                                 $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "'");
-                                                if ($voucher > 0) {
+                                                $use = $wpdb->get_var("SELECT SUM(qty) AS total FROM wp_use WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                                $total = $voucher - $use;
+                                                if ($total > 0) {
+
                                                 ?>
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -224,7 +227,7 @@ if (isset($_SESSION['id'])) {
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            Anda akan memasang iklan dengan menggunakan 1 voucher dan saldo voucher saat ini <span class="bold-xl"><?= $voucher; ?></span>. Apakah anda yakin untuk memasang iklan ?
+                                                            Anda akan memasang iklan dengan menggunakan 1 voucher dan saldo voucher saat ini <span class="bold-xl"><?= $total; ?></span>. Apakah anda yakin untuk memasang iklan ?
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
