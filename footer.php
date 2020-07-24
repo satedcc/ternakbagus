@@ -1,3 +1,6 @@
+<div class="notifikasi">
+    Anda baru saja menyukai sebuah iklan
+</div>
 <footer>
     <div class="footer-top">
         <div class="container">
@@ -85,94 +88,82 @@
 wp_footer();
 ?>
 <script src="<?php echo get_template_directory_uri(); ?>/assets/js/jquery-chained.min.js"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/main.js"></script>
 <script>
     $(document).ready(function() {
-        $("#kota").chained("#provinsi");
-        $("#kecamatan").chained("#kota");
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        $("#subs").chained("#kategori");
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('.owl-carousel').owlCarousel({
-            loop: true,
-            margin: 10,
-            responsiveClass: true,
-            responsive: {
-                0: {
-                    items: 2,
-                    nav: true
+        $(".like-btn").click(function() {
+            var iklan = $(this).attr('id');
+            $.ajax({
+                url: '<?= get_template_directory_uri(); ?>/like.php',
+                method: 'POST',
+                data: {
+                    iklan: iklan
                 },
-                600: {
-                    items: 2,
-                    nav: false
-                },
-                1000: {
-                    items: 5,
-                    nav: true,
-                    loop: false
+                success: function(data) {
+                    $('.notifikasi').fadeIn(500);
+                    $('.notifikasi').delay(3000).fadeOut(500);
                 }
-            }
-        })
-    })
-</script>
-<script>
-    $(document).ready(function() {
-        $('#icon').click(function() {
-            $('nav').toggleClass('show')
+            });
         });
     });
 </script>
 <script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "300px";
-    }
+    $(document).ready(function() {
+        $("#kirimpesan").click(function() {
+            var pesan = $("#pesan").val();
+            var member = $("#member").val();
+            var iklan = $("#iklan").val();
+            var status = "inputpesan";
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
+            $.ajax({
+                url: '<?= get_template_directory_uri(); ?>/like.php',
+                method: 'POST',
+                data: {
+                    pesan: pesan,
+                    member: member,
+                    iklan: iklan,
+                    status: status
+                },
+                success: function(data) {
+                    $('#chatModal').modal('hide');
+                    $('.notifikasi-pesan').delay(1000).fadeIn(500);
+                    $('.notifikasi-pesan').delay(3000).fadeOut(500);
+                    $('#pesan').val('');
+                }
+            });
+        });
+    });
 </script>
 <script>
     $(document).ready(function() {
-        $(document).on('change', '.btn-file :file', function() {
-            var input = $(this),
-                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-            input.trigger('fileselect', [label]);
-        });
+        $("#tawar").click(function() {
+            var tawar = $("#tawarpesan").val();
+            var member = $("#member").val();
+            var iklan = $("#iklan").val();
+            var status = "inputawar";
 
-        $('.btn-file :file').on('fileselect', function(event, label) {
-
-            var input = $(this).parents('.input-group').find(':text'),
-                log = label;
-
-            if (input.length) {
-                input.val(log);
-            } else {
-                if (log) alert(log);
-            }
-
-        });
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-                    $('#img-upload').attr('src', e.target.result);
+            $.ajax({
+                url: '<?= get_template_directory_uri(); ?>/like.php',
+                method: 'POST',
+                data: {
+                    tawar: tawar,
+                    member: member,
+                    iklan: iklan,
+                    status: status
+                },
+                success: function(data) {
+                    $('#exampleModal').modal('hide');
+                    $('.notifikasi-pesan').delay(1000).fadeIn(500);
+                    $('.notifikasi-pesan').delay(3000).fadeOut(500);
+                    $('#pesan').val('');
                 }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#imgInp").change(function() {
-            readURL(this);
+            });
         });
+    });
+</script>
+<script type="text/javascript">
+    $(window).on('load', function() {
+        $('#konfirmasiRegister').modal('show');
     });
 </script>
 </body>

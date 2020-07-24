@@ -12,16 +12,6 @@ if (isset($_SESSION['id'])) {
 
 ?>
 
-    <div class="container bars">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <a href="#" onclick="openNav()">
-                    <i class="far fa-bars fa-2x"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <section id="dashboard" class="dashboard">
         <div class="container">
             <div class="row">

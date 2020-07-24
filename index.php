@@ -5,19 +5,19 @@ $kategori = $wpdb->get_results("SELECT * FROM wp_kategories ORDER BY kategori_id
 
 if (isset($_POST) && $_POST['email'] != '' && $_POST['password'] != '') {
     $password = md5($_POST['password']);
-    $login = $wpdb->get_var("SELECT COUNT(*) FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'");
+    $login = $wpdb->get_var("SELECT COUNT(*) FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "' AND aktif='Y'");
     if ($login > 0) {
 
-        $result = $wpdb->get_row("SELECT * FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'");
+        $result = $wpdb->get_row("SELECT * FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'  AND aktif='Y'");
 
-        $_SESSION['nama'] = $result->nama;
-        $_SESSION['id'] = $sid;
-        $_SESSION['email'] = $result->email;
-        $_SESSION['slug'] = $result->slug_nama;
-        $_SESSION['member'] = $result->member_id;
-        $_SESSION['photo'] = $result->photo;
-        $_SESSION['tgl'] = $result->create_at;
-        $_SESSION['id_member']    = $result->member_id;
+        $_SESSION['nama']       = $result->nama;
+        $_SESSION['id']         = $sid;
+        $_SESSION['email']      = $result->email;
+        $_SESSION['slug']       = $result->slug_nama;
+        $_SESSION['member']     = $result->member_id;
+        $_SESSION['photo']      = $result->photo;
+        $_SESSION['tgl']        = $result->create_at;
+        $_SESSION['id_member']  = $result->member_id;
         header("Location: ternakbagus/dashboard");
         exit();
     } else {
@@ -27,8 +27,35 @@ if (isset($_POST) && $_POST['email'] != '' && $_POST['password'] != '') {
 
 
 get_header();
+if ($_SESSION['id'] == "") {
+    echo '<a href="#" class="iklan-bottom" data-toggle="modal" data-target="#iklan-bottom">
+            <i class="far fa-bell mr-2"></i>PASANG IKLAN
+        </a>';
+} else {
+    echo '<a href="ternak/" class="iklan-bottom">
+            <i class="far fa-bell mr-2"></i>PASANG IKLAN
+        </a>';
+}
 ?>
-
+<!-- Modal -->
+<div class="modal fade" id="iklan-bottom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Anda belum login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Silahkan Login atau Register terlebih dahulu untuk bisa beriklan atau melihat iklan di <span class="bold-md">ternakbagus.com</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 <section id="hero">
     <div class="hero-caption">
         <div <?php if (isset($_SESSION['id'])) : echo "class='w-100'";
@@ -135,7 +162,7 @@ get_header();
 <?php
 foreach ($kategori as $k) {
 ?>
-    <div class="content">
+    <div class="content my-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -155,9 +182,16 @@ foreach ($kategori as $k) {
 
                 if ($cek > 0) {
                 ?>
-                    <div class="owl-carousel owl-theme">
+                    <div class="owl-carousel owl-theme mt-4">
                         <?php
-                        $result = $wpdb->get_results("SELECT * FROM wp_aads LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id WHERE kategori_id='" . $k['kategori_id'] . "'", ARRAY_A);
+                        $result = $wpdb->get_results("SELECT * FROM wp_aads 
+                                                                LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id 
+                                                                LEFT JOIN wp_images ON wp_aads.add_id=wp_images.add_id
+                                                                LEFT JOIN kecamatan ON wp_aads.lokasi=kecamatan.id_kec
+                                                                WHERE kategori_id='" . $k['kategori_id'] . "'
+                                                                AND status='1'
+                                                                AND status_tayang='1'
+                                                                GROUP BY wp_aads.add_id", ARRAY_A);
                         foreach ($result as $r) {
                             if ($r['kategori_iklan'] == "ternak") {
                                 $desc = $r['berat'] . "kg";
@@ -166,34 +200,45 @@ foreach ($kategori as $k) {
                             } elseif ($r['kategori_iklan'] == "layanan") {
                                 $desc = $r['layanan'];
                             }
+                            $cek = $wpdb->get_var("SELECT COUNT(*) FROM wp_like WHERE member_id='" . $_SESSION['member'] . "' AND add_id='" . $r['add_id'] . "'");
+                            if ($cek > 0) {
+                                $btn = "<button class='circle-sm disabled bg-info text-white'><i class='far fa-heart'></i></a></button>";
+                            } else {
+                                if ($_SESSION['id'] == "") {
+                                    $btn = "<button class='circle-sm' data-toggle='modal' data-target='#iklan-bottom'><i class='far fa-heart'></i></a></button>";
+                                } else {
+                                    $btn = "<button class='circle-sm like-btn' id='" . $r['add_id'] . "'><i class='far fa-heart'></i></a></button>";
+                                }
+                            }
                         ?>
                             <div class="col-lg col-md-4 p-0">
                                 <div class="item">
                                     <div class="imgbox">
-                                        <img src="wp-content/uploads/<?php echo "$r[slug_nama]/$r[file];" ?>" alt="">
+                                        <img src="wp-content/uploads/<?php echo "$r[slug_nama]/$r[img_desc];" ?>" alt="">
                                     </div>
                                     <div class="body">
                                         <h2 class="mt-2 f-18 m-0"><?php echo $r['judul']; ?></h2>
-                                        <span class="f-12"><i class="far fa-map-marker-alt text-primary mr-2"></i>Kota
-                                            Surabaya</span>
+                                        <span class="f-12"><i class="far fa-map-marker-alt text-primary mr-2"></i><?= $r['nama']; ?></span>
                                         <div class="f-12 py-2 m-0">
                                             <i class="far fa-badge-check text-success"></i> Tersedia - <span class="bold-sm"><?php echo $desc; ?></span>
                                         </div>
-                                        <div class="rating my-3">
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                            <i class="far fa-star text-secondary"></i>
-                                            <i class="fas fa-star-half-alt text-secondary"></i>
-                                        </div>
-                                        <h1 class="bold-md mt-3 f-20 m-0"><?php echo format_rupiah($r['harga']); ?></h1>
-                                        <span class="f-12 text-muted"><del>Rp. 18.000.000</del></span>
+                                        <h1 class="bold-md mt-3 f-20 m-0">Rp. <?php echo format_rupiah($r['harga']); ?></h1>
                                     </div>
                                     <div class="beli">
                                         <div class="beli-caption">
                                             <div class="mt-3">
-                                                <a href="view/?id=<?= $r['add_id']; ?>" class="circle-sm"><i class="far fa-eye"></i></a>
-                                                <a href="" class="circle-sm"><i class="far fa-heart"></i></a>
+                                                <?php
+                                                if ($_SESSION['id'] == "") {
+                                                ?>
+                                                    <a href="#" class="circle-sm" data-toggle="modal" data-target="#iklan-bottom"><i class="far fa-eye"></i></a>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <a href="view/?id=<?= $r['add_id']; ?>" class="circle-sm"><i class="far fa-eye"></i></a>
+                                                <?php
+                                                }
+                                                ?>
+                                                <?= $btn ?>
                                             </div>
                                         </div>
                                     </div>
@@ -209,9 +254,9 @@ foreach ($kategori as $k) {
                     <div class="col-md-6 m-auto text-center">
                         <div class="show-items">
                             <h1 class="f-20">
-                                <img src="wp-content/uploads/2020/06/cow.svg" alt="">
+                                <img src="wp-content/uploads/cow.svg" alt="">
                                 <h1 class="f-18">Belum ada iklan tampil</h1>
-                                <a href="dashboard/" class="myButton">Ayo Beriklan</a>
+                                <a href="ternak/" class="myButton">Ayo Beriklan</a>
                             </h1>
                         </div>
                     </div>
@@ -224,6 +269,5 @@ foreach ($kategori as $k) {
 <?php
 }
 ?>
-
 <?php
 get_footer();

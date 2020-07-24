@@ -12,6 +12,8 @@ if (isset($_SESSION['id'])) {
         <div class="container my-5">
             <div class="row">
                 <div class="col-md-4">
+                    <h1 class="f-18 bold-md">Inbox</h1>
+                    <hr>
                     <?php
                     $chats = $wpdb->get_results("SELECT * FROM `wp_chat` LEFT JOIN wp_members ON wp_chat.send_id=wp_members.member_id WHERE chat_id IN (SELECT MAX(chat_id) FROM wp_chat GROUP BY send_id) AND receiver_id='" . $_SESSION['member'] . "' OR send_id='" . $_SESSION['member'] . "' GROUP BY send_id ORDER BY chat_at DESC", ARRAY_A);
 
@@ -20,25 +22,32 @@ if (isset($_SESSION['id'])) {
                             $class = " new";
                         }
                     ?>
-                        <div class="menu-inbox">
-                            <a href="inbox/?receiver=<?= $c['receiver_id']; ?>&sender=<?= $c['send_id']; ?>&iklan=<?= $c['add_id']; ?>" class="content-main d-flex align-items-center<?= $class; ?>">
-                                <div>
+                        <div class="content-main<?= $class; ?>">
+                            <div class="row">
+                                <div class="col-auto m-0 pr-0">
                                     <?php
                                     if ($c['photo'] != "") {
                                     ?>
                                         <img src="../wp-content/uploads/<?php echo "$c[slug_nama]/$c[photo]"; ?>" alt="" class="img-inbox mr-2">
                                     <?php
                                     } else {
-                                        echo "<div class='default-img-sm mb-4'><i class='far fa-user'></i></div>";
+                                        echo "<div class='default-img-sm'><i class='far fa-user'></i></div>";
                                     }
                                     ?>
                                 </div>
-                                <div class="list-message">
-                                    <h1 class="f-14 m-0 bold-md"><?= $c['nama']; ?></h1>
-                                    <p class="m-0 f-12"><?= $c['message']; ?></p>
-                                    <span class="jam"><?php echo time_ago($c['chat_at']); ?></span>
+                                <div class="col list-message px-0">
+                                    <a href="inbox/?receiver=<?= $c['receiver_id']; ?>&sender=<?= $c['send_id'] ?>&iklan=<?= $c['add_id']; ?>">
+                                        <h1 class="f-14 m-0 bold-md"><?= $c['nama']; ?></h1>
+                                        <?= $c['message']; ?>
+                                        <h6 class="jam"><?php echo time_ago($c['chat_at']); ?></h6>
+                                    </a>
                                 </div>
-                            </a>
+                                <div class="col-auto">
+                                    <a href="chatdelete/?receiver=<?= $c['receiver_id']; ?>&sender=<?= $c['send_id'] ?>&iklan=<?= $c['add_id']; ?>">
+                                        <i class="far fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     <?php
                     }
@@ -79,8 +88,9 @@ if (isset($_SESSION['id'])) {
                                     <div class="col-md-8">
                                         <input type="text" name="sender" value="<?= $_GET['sender']; ?>" hidden>
                                         <input type="text" name="receiver" value="<?= $_GET['receiver']; ?>" hidden>
+                                        <input type="text" name="iklan" value="<?= $_GET['iklan']; ?>" hidden>
                                         <input type="text" name="type" value="<?= $status; ?>" hidden>
-                                        <input type="text" name="message" id="" placeholder="masukkan pesan anda..." class="w-100">
+                                        <input type="text" name="message" id="pesan" placeholder="masukkan pesan anda..." class="w-100">
                                     </div>
                                     <div class="col-md-auto">
                                         <label for="photo"><i class="far fa-paperclip f-20 text-secondary mr-4"></i></label>
@@ -94,7 +104,12 @@ if (isset($_SESSION['id'])) {
                         </div>
                     <?php
                     } else {
-                        echo "Tidak ada chat";
+                        echo "<div class='text-center empty-chat content-utama'>
+                        <div class='body'>
+                            <i class='far fa-comment-smile fa-8x my-3 gradient'></i>
+                            <p>Belum ada pesan yang di pilih</p>
+                        </div>
+                </div>";
                     }
                     ?>
                 </div>
@@ -104,11 +119,11 @@ if (isset($_SESSION['id'])) {
     <?php
     } else {
         echo "<div class='col-md-8 m-auto text-center empty-chat'>
-       <div class='body'>
-       <h1 class='f-18'>Belum ada pesan yang masuk</h1>
-       <i class='far fa-comment-smile fa-8x my-3'></i>
-       <p>Semua pesan akan tersimpan dan tampil di sini</p>
-       </div>
+                    <div class='body'>
+                        <h1 class='f-18'>Belum ada pesan yang masuk</h1>
+                        <i class='far fa-comment-smile fa-8x my-3'></i>
+                        <p>Semua pesan akan tersimpan dan tampil di sini</p>
+                    </div>
             </div>";
     }
 
@@ -139,15 +154,21 @@ if (isset($_SESSION['id'])) {
                 data: $(this).serialize(),
                 success: function() {
                     loadData();
+                    resetForm();
                 }
             });
         })
     })
 
+    function resetForm() {
+        $('#pesan').val('');
+        $('#pesan').focus();
+    }
+
 
 
     function loadData() {
-        $.get('../wp-content/themes/ternak/simpan.php?receiver=<?= $_GET['receiver'] ?>&sender=<?= $_GET['sender'] ?>', function(data) {
+        $.get('../wp-content/themes/ternak/simpan.php?receiver=<?= $_GET['receiver'] ?>&sender=<?= $_GET['sender'] ?>&iklan=<?= $_GET['iklan'] ?>', function(data) {
             $('#content').html(data)
         })
     }

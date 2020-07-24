@@ -37,6 +37,13 @@ get_header();
             </div>
         </div>
         <div class="login-front">
+            <?php
+            if ($_GET['email'] == "true") {
+                echo "<div class='alert alert-warning' role='alert'>
+    Email telah terdaftar
+</div>";
+            }
+            ?>
             <form action="" method="post">
                 <div class="form-main w-100">
                     <h2 class="f-24 bold-md mt-4">Daftar Sekarang</h2>
@@ -79,7 +86,7 @@ get_header();
                     </div>
                     <div class="main-input">
                         <div class="input-text w-100">
-                            <button class="myButton py-3 block w-100">DAFTAR SEKARANG</button>
+                            <button class="myButton py-3 block w-100" name="daftar">DAFTAR SEKARANG</button>
                         </div>
                     </div>
                     <span>Sudah punya akun ? <a href="login">Login Sekarang</a></span>

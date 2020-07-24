@@ -97,7 +97,7 @@ if (isset($_SESSION['id'])) {
                                     <div class="voucher">
                                         <div class="item-voucher">
                                             <?php
-                                            $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                            $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "' AND status_bayar='1'");
                                             $use = $wpdb->get_var("SELECT SUM(qty) AS total FROM wp_use WHERE member_id='" . $_SESSION['id_member'] . "'");
                                             $total = $voucher - $use;
                                             $nilai  = $total * 2500;
@@ -116,7 +116,7 @@ if (isset($_SESSION['id'])) {
                                             </span>
                                         </div>
                                         <div class="p-4 item-voucher">
-                                            <h2 class="bold-md mb-2 f-18">Hai, Satria</h2>
+                                            <h2 class="bold-md mb-2 f-18">Hai,<br> <?= $_SESSION['nama'] ?></h2>
                                             <p class="f-12 mb-2">Jika vouchermu telah habis, silahkan membelinya di kami
                                                 sehingga
                                                 anda akan

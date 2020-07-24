@@ -14,17 +14,9 @@ if (isset($_SESSION['id'])) {
     get_header();
 
 ?>
-
-    <div class="container bars">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <a href="#" onclick="openNav()">
-                    <i class="far fa-bars fa-2x"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
+    <a href="ternak/" class="iklan-bottom">
+        <i class="far fa-bell mr-2"></i>PASANG IKLAN
+    </a>
     <section id="dashboard" class="dashboard">
         <div class="container">
             <div class="row">
@@ -59,10 +51,11 @@ if (isset($_SESSION['id'])) {
                                     echo "<div class='default-img mb-4'><i class='far fa-user'></i></div>";
                                 }
                                 ?>
-                                <label for="photo"><i class="far fa-camera-alt mr-3"></i>Upload Foto</label>
-                                <input type="file" name="photo" id="photo">
+                                <label for="file-input"><i class="far fa-camera-alt mr-3"></i>Upload Foto</label>
+                                <input type="file" name="photo" id="file-input">
                                 <p class="f-12">Besar file: maksimum 10.000.000 bytes (10 Megabytes)
                                     Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG</p>
+                                <div id="preview"></div>
                             </div>
                             <div class="w-100">
                                 <div class="profile-input">

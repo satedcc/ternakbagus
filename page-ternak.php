@@ -12,22 +12,13 @@ if (isset($_SESSION['id'])) {
 
     if ($_POST['tombol'] == "save") {
         iklan_ternak();
-    } else {
+    } elseif ($_POST['tombol'] == "edit") {
         editternak();
     }
 
     get_header();
 ?>
 
-    <div class="container bars">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <a href="#" onclick="openNav()">
-                    <i class="far fa-bars fa-2x"></i>
-                </a>
-            </div>
-        </div>
-    </div>
     <section id="dashboard" class="dashboard">
         <div class="container">
             <div class="row">
@@ -157,7 +148,7 @@ if (isset($_SESSION['id'])) {
                                         <label for="" class="bold-sm m-0 my-2">Kecamatan *</label>
                                         <div class="input-text">
                                             <!--Kabupaten-->
-                                            <select id="kecamatan" class="form-control" name="lokasi">
+                                            <select id="kecamatan" class="form-control" name="kecamatan">
                                                 <option value="">Pilih kecamatan</option>
                                                 <?php
                                                 $query = $wpdb->get_results("SELECT kecamatan.nama AS nama_kec, kabupaten.id_kab, kecamatan.id_kec FROM kecamatan INNER JOIN kabupaten ON kecamatan.id_kab = kabupaten.id_kab order by nama_kec", ARRAY_A);
@@ -184,18 +175,21 @@ if (isset($_SESSION['id'])) {
                                         </div>
                                     </div>
                                     <?php
-                                    if (isset($edit['file'])) {
-                                        echo "<img src='../wp-content/uploads/$edit[slug_nama]/$edit[file]' class='w-25'>";
+                                    if (isset($_GET['edit'])) {
+                                        $photo = $wpdb->get_results("SELECT * FROM wp_images WHERE add_id='" . $edit['add_id'] . "'", ARRAY_A);
+                                        foreach ($photo as $p) {
+                                            echo "<input type='text' value='$p[image_id]' name='images[]' hidden><img src='../wp-content/uploads/$edit[slug_nama]/$p[img_desc]' alt='' class='editimg'>";
+                                        }
                                     }
                                     ?>
                                     <div class="form-input my-4">
                                         <div class="input-text file">
-                                            <label for="imgInp">
+                                            <label for="file-input">
                                                 <i class="far fa-images mr-2"></i>
                                                 Upload Foto</label>
-                                            <input type="file" name="file" id="imgInp">
+                                            <input id="file-input" type="file" name="images[]" multiple>
                                         </div>
-                                        <img id='img-upload' class="mt-3">
+                                        <div id="preview"></div>
                                     </div>
                                     <div class="form-input">
                                         <input type="checkbox" name="tampil"> Tampilkan nomor handphone
@@ -204,7 +198,7 @@ if (isset($_SESSION['id'])) {
                                         <input type="text" name="id" id="" value="<?= $_GET['edit']; ?>" hidden>
                                         <?php
                                         if ($_GET['edit'] != "") {
-                                            echo "<button type='button' class='btn btn-primary' name='tombol' value='edit' data-toggle='modal' data-target='#exampleModalEdit'>Edit Iklan</button>";
+                                            echo "<button type='button' class='btn btn-primary'  data-toggle='modal' data-target='#exampleModalEdit'>Edit Iklan</button>";
                                         } else {
                                             echo "<button type='button' class='btn btn-primary'  data-toggle='modal' data-target='#exampleModal'>Pasang Iklan</button>";
                                         }
@@ -213,7 +207,7 @@ if (isset($_SESSION['id'])) {
                                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <?php
-                                                $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                                $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "' AND status_bayar='1'");
                                                 $use = $wpdb->get_var("SELECT SUM(qty) AS total FROM wp_use WHERE member_id='" . $_SESSION['id_member'] . "'");
                                                 $total = $voucher - $use;
                                                 if ($total > 0) {
@@ -275,7 +269,7 @@ if (isset($_SESSION['id'])) {
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-primary">Edit iklan</button>
+                                                        <button type="submit" class="btn btn-primary" name='tombol' value='edit'>Edit iklan</button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -3,31 +3,17 @@ session_start();
 $sid = session_id();
 $kategori = $wpdb->get_results("SELECT * FROM wp_kategories ORDER BY kategori_id ASC", ARRAY_A);
 
-if (isset($_POST) && $_POST['email'] != '' && $_POST['password'] != '') {
-    $password = md5($_POST['password']);
-    $login = $wpdb->get_var("SELECT COUNT(*) FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'");
-    if ($login > 0) {
-
-        $result = $wpdb->get_row("SELECT * FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'");
-
-        $_SESSION['nama'] = $result->nama;
-        $_SESSION['id'] = $sid;
-        $_SESSION['email'] = $result->email;
-        $_SESSION['slug'] = $result->slug_nama;
-        $_SESSION['member'] = $result->member_id;
-        $_SESSION['photo'] = $result->photo;
-        $_SESSION['tgl'] = $result->create_at;
-        header("Location: ternakbagus/dashboard");
-        exit();
-    } else {
-        $message = "Email dan password salah";
-    }
-}
-
-
 get_header();
+if ($_SESSION['id'] == "") {
+    echo '<a href="#" class="iklan-bottom" data-toggle="modal" data-target="#iklan-bottom">
+            <i class="far fa-bell mr-2"></i>PASANG IKLAN
+        </a>';
+} else {
+    echo '<a href="ternak/" class="iklan-bottom">
+            <i class="far fa-bell mr-2"></i>PASANG IKLAN
+        </a>';
+}
 ?>
-
 <div class="categories my-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -62,36 +48,54 @@ get_header();
                 </div>
             </div>
             <?php
-            $result = $wpdb->get_results("SELECT * FROM wp_aads LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id WHERE kategori_id='" . $_GET['idkategori'] . "' LIMIT 15", ARRAY_A);
+            $result = $wpdb->get_results("SELECT * FROM wp_aads 
+                                                    LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id 
+                                                    LEFT JOIN wp_images ON wp_aads.add_id=wp_images.add_id
+                                                    LEFT JOIN kecamatan ON wp_aads.lokasi=kecamatan.id_kec 
+                                                    WHERE kategori_id='" . $_GET['idkategori'] . "' 
+                                                    AND status='1'
+                                                    AND status_tayang='1'
+                                                    GROUP BY wp_aads.add_id LIMIT 15", ARRAY_A);
             foreach ($result as $r) {
+                $cek = $wpdb->get_var("SELECT COUNT(*) FROM wp_like WHERE member_id='" . $_SESSION['member'] . "' AND add_id='" . $r['add_id'] . "'");
+                if ($cek > 0) {
+                    $btn = "<button class='circle-sm disabled bg-info text-white'><i class='far fa-heart'></i></a></button>";
+                } else {
+                    if ($_SESSION['id'] == "") {
+                        $btn = "<button class='circle-sm' data-toggle='modal' data-target='#iklan-bottom'><i class='far fa-heart'></i></a></button>";
+                    } else {
+                        $btn = "<button class='circle-sm like-btn' id='" . $r['add_id'] . "'><i class='far fa-heart'></i></a></button>";
+                    }
+                }
             ?>
                 <div class="col-md-3 col-6 mb-4">
                     <div class="item">
                         <div class="imgbox">
-                            <img src="../wp-content/uploads/<?php echo "$r[slug_nama]/$r[file];" ?>" alt="">
+                            <img src="../wp-content/uploads/<?php echo "$r[slug_nama]/$r[img_desc];" ?>" alt="">
                         </div>
                         <div class="body">
                             <h2 class="mt-2 f-18 m-0"><?php echo $r['judul']; ?></h2>
-                            <span class="f-12"><i class="far fa-map-marker-alt text-primary mr-2"></i>Kota
-                                Surabaya</span>
+                            <span class="f-12"><i class="far fa-map-marker-alt text-primary mr-2"></i><?= $r['nama']; ?></span>
                             <div class="f-12 py-2 m-0">
                                 <i class="far fa-badge-check text-success"></i> Tersedia - <span class="bold-sm"><?php echo $r['berat']; ?>kg</span>
                             </div>
-                            <div class="rating my-3">
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="fas fa-star text-warning"></i>
-                                <i class="far fa-star text-secondary"></i>
-                                <i class="fas fa-star-half-alt text-secondary"></i>
-                            </div>
-                            <h1 class="bold-md mt-3 f-20 m-0"><?php echo format_rupiah($r['harga']); ?></h1>
-                            <span class="f-12 text-muted"><del>Rp. 18.000.000</del></span>
+                            <h1 class="bold-md mt-3 f-20 m-0">Rp. <?php echo format_rupiah($r['harga']); ?></h1>
                         </div>
                         <div class="beli">
                             <div class="beli-caption">
                                 <div class="mt-3">
-                                    <a href="view/?id=<?= $r['add_id']; ?>" class="circle-sm"><i class="far fa-eye"></i></a>
-                                    <a href="" class="circle-sm"><i class="far fa-heart"></i></a>
+                                    <?php
+                                    if ($_SESSION['id'] == "") {
+                                    ?>
+                                        <a href="#" class="circle-sm" data-toggle="modal" data-target="#iklan-bottom"><i class="far fa-eye"></i></a>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <a href="view/?id=<?= $r['add_id']; ?>" class="circle-sm"><i class="far fa-eye"></i></a>
+                                    <?php
+                                    }
+                                    ?>
+                                    <?= $btn; ?>
                                 </div>
                             </div>
                         </div>
@@ -103,6 +107,24 @@ get_header();
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="iklan-bottom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Anda belum login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Silahkan Login atau Register terlebih dahulu untuk bisa beriklan dan melihat iklan di <span class="bold-md">ternakbagus.com</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
 get_footer();

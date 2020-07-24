@@ -1,7 +1,7 @@
 <?php
 require_once('../../../wp-config.php');
 global $wpdb;
-$chat_message = $wpdb->get_results("SELECT * FROM wp_chat WHERE receiver_id='" . $_GET['receiver'] . "' AND send_id='" . $_GET['sender'] . "'", ARRAY_A);
+$chat_message = $wpdb->get_results("SELECT * FROM wp_chat WHERE receiver_id='" . $_GET['receiver'] . "' AND send_id='" . $_GET['sender'] . "' AND add_id='" . $_GET['iklan'] . "'", ARRAY_A);
 foreach ($chat_message as $cm) {
     if ($cm['type_chat'] == "seller") {
 ?>

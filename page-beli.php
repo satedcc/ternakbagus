@@ -7,16 +7,6 @@ if (isset($_SESSION['id'])) {
     get_header();
 ?>
 
-    <div class="container bars">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <a href="#" onclick="openNav()">
-                    <i class="far fa-bars fa-2x"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <section id="dashboard" class="dashboard">
         <div class="container">
             <div class="row">
@@ -42,7 +32,7 @@ if (isset($_SESSION['id'])) {
                                             <h3 class="f-14 bold-md">Paket 1</h3>
                                             <h1 class="bold-xl f-30">Rp. 2.500</h1>
                                             <ul>
-                                                <li>Masa berlaku 30 hari</li>
+                                                <li>Masa tayang iklan 30 hari per voucher</li>
                                             </ul>
                                         </label>
                                     </div>
@@ -53,7 +43,7 @@ if (isset($_SESSION['id'])) {
                                             <h1 class="bold-xl f-30">Rp. 10.000</h1>
                                             <ul>
                                                 <li>Gratis 1 Voucher</li>
-                                                <li>Masa berlaku 30 hari</li>
+                                                <li>Masa tayang iklan 30 hari per voucher</li>
                                             </ul>
                                         </label>
                                     </div>
@@ -64,7 +54,7 @@ if (isset($_SESSION['id'])) {
                                             <h1 class="bold-xl f-30">Rp. 25.000</h1>
                                             <ul>
                                                 <li>Gratis 3 Voucher</li>
-                                                <li>Masa berlaku 30 hari</li>
+                                                <li>Masa tayang iklan 30 hari per voucher</li>
                                             </ul>
                                         </label>
                                     </div>

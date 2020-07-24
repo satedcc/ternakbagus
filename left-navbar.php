@@ -41,8 +41,6 @@
             <ul>
                 <li><a href="">Tentang Kami</a></li>
                 <li><a href="">Syarat & Ketentuan</a></li>
-                <li><a href="">Semua Iklan</a></li>
-                <li><a href="">Lokasi Ternak</a></li>
                 <li><a href="">Hubungi Kami</a></li>
             </ul>
         </div>

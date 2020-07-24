@@ -3,10 +3,10 @@ session_start();
 $sid = session_id();
 if (isset($_POST) && $_POST['email'] != '' && $_POST['password'] != '') {
     $password = md5($_POST['password']);
-    $login = $wpdb->get_var("SELECT COUNT(*) FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'");
+    $login = $wpdb->get_var("SELECT COUNT(*) FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'  AND aktif='Y'");
     if ($login > 0) {
 
-        $result = $wpdb->get_row("SELECT * FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'");
+        $result = $wpdb->get_row("SELECT * FROM wp_members WHERE email='" . $_POST['email'] . "' AND password='" . $password . "'  AND aktif='Y'");
 
         $_SESSION['nama']   = $result->nama;
         $_SESSION['id']     = $sid;
@@ -25,7 +25,53 @@ if (isset($_POST) && $_POST['email'] != '' && $_POST['password'] != '') {
 
 
 get_header();
+if ($_GET['success'] == "1") {
 ?>
+    <!-- Modal -->
+    <div class="modal fade" id="konfirmasiRegister" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Konfirmasi Register</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Daftar akun berhasil, mohon untuk mengecek email anda
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+} elseif ($_GET['aktif'] == "true") {
+?>
+    <!-- Modal -->
+    <div class="modal fade" id="konfirmasiRegister" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Konfirmasi Akun</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Akun telah aktif, silahkan login untuk beriklan di <span class="bold-md">ternakbagus.com</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+}
+?>
+
 
 
 <section id="hero">
@@ -96,7 +142,7 @@ get_header();
                                 <button class="myButton py-2">LOGIN</button>
                             </div>
                         </div>
-                        <span>Belum punya akun ? <a href="">Daftar Sekarang</a></span>
+                        <span>Belum punya akun ? <a href="register">Daftar Sekarang</a></span>
                     </div>
                 </form>
             </div>
