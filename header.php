@@ -144,10 +144,12 @@
                             </div>
                         </div>
                         <div class="col-md-5 text-center">
-                            <div class="input-text">
-                                <input type="text" placeholder="cari di sini">
-                                <button><i class="far fa-search"></i></button>
-                            </div>
+                            <form action="../search" method="post">
+                                <div class="input-text">
+                                    <input type="text" placeholder="cari di sini">
+                                    <button><i class="far fa-search"></i></button>
+                                </div>
+                            </form>
                         </div>
                         <div class="col-md-4">
                             <?php
@@ -157,8 +159,8 @@
                             ?>
                                 <ul class="w-100 float-right">
                                     <li><a href="<?php echo get_site_url(); ?>">BERANDA</a></li>
-                                    <li><a href="">BLOG</a></li>
-                                    <li><a href="">KONTAK</a></li>
+                                    <li><a href="../blog">BLOG</a></li>
+                                    <li><a href="../kontak">KONTAK</a></li>
                                     <li>
                                         <div class="dropdown">
                                             <a type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="top-akun">
@@ -316,8 +318,8 @@
                             ?>
                                 <ul>
                                     <li><a href="<?php echo get_site_url(); ?>">BERANDA</a></li>
-                                    <li><a href="">BLOG</a></li>
-                                    <li><a href="">KONTAK</a></li>
+                                    <li><a href="blog/">BLOG</a></li>
+                                    <li><a href="kontak/">KONTAK</a></li>
                                     <li>
                                         <div class="dropdown">
                                             <a href="login/" id="dropdownMenuButton" class="top-akun">

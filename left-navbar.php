@@ -17,8 +17,8 @@
             <h1 class="bold-md f-18 m-0"><?php echo $_SESSION['nama']; ?></h1>
             <span class="f-12">Bergabung sejak <?php echo time_ago($_SESSION['tgl']); ?>
             </span>
-            <a href="setting" class="icon-link blue text-white rounded f-12 mt-3">
-                <i class="far fa-cog mr-2"></i> Update Profile
+            <a href="dashboard" class="icon-link blue text-white rounded f-12 mt-3">
+                <i class="far fa-cog mr-2"></i> Dashboard
             </a>
             <!-- <a href="" class="icon-link bg-warning text-white rounded f-12">
                 <i class="far fa-rocket-launch"></i>
@@ -39,9 +39,9 @@
         </div>
         <div class="menusidebar f-14">
             <ul>
-                <li><a href="">Tentang Kami</a></li>
-                <li><a href="">Syarat & Ketentuan</a></li>
-                <li><a href="">Hubungi Kami</a></li>
+                <li><a href="../tentang-kami">Tentang Kami</a></li>
+                <li><a href="../syarat-dan-ketentuan">Syarat & Ketentuan</a></li>
+                <li><a href="../kontak">Hubungi Kami</a></li>
             </ul>
         </div>
     </div>

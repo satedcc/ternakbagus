@@ -4,7 +4,10 @@ $sid = session_id();
 
 
 if (isset($_SESSION['id'])) {
-    $result = $wpdb->get_results("SELECT * FROM wp_vouchers WHERE member_id='" . $_SESSION['member'] . "' ORDER BY v_id DESC", ARRAY_A);
+    $result = $wpdb->get_results("SELECT * FROM wp_vouchers LEFT JOIN wp_paket
+                                            ON wp_vouchers.v_paket=wp_paket.paket_id
+                                            WHERE member_id='" . $_SESSION['member'] . "' 
+                                            ORDER BY v_id DESC", ARRAY_A);
     //use_voucher($_POST['use'], $_POST['id']);
 
     if (isset($_POST['btn-konfirmasi'])) {
@@ -45,18 +48,11 @@ if (isset($_SESSION['id'])) {
                         <div class="dashboard-body">
                             <?php
                             foreach ($result as $k) {
+                                $nilai = $k['harga_voucher'] * $k['jumlah'];
                                 if ($k['status_bayar'] == "1") :
                                     $status = "<span class='py-2 px-2 f-12 rounded text-white bg-success'><i class='far fa-badge-check mr-2'></i>Lunas</span>";
                                 else :
                                     $status = "<span class='py-2 px-2 f-12 rounded text-white bg-warning'><i class='far fa-hourglass-half mr-2'></i>Menunggu Pembayaran</span>";
-                                endif;
-
-                                if ($k['v_paket'] == "1") :
-                                    $nilai = 2500;
-                                elseif ($k['v_paket'] == "4") :
-                                    $nilai = 10000;
-                                elseif ($k['v_paket'] == "10") :
-                                    $nilai = 25000;
                                 endif;
                             ?>
                                 <div class="history mb-3">
@@ -95,14 +91,12 @@ if (isset($_SESSION['id'])) {
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <h2 class="f-18">ORDER ID: <span class="bold-md">2345</span></h2>
+                                                    <h2 class="f-18">ORDER ID: <span class="bold-md"><?= $k['kode_bayar']; ?></span></h2>
+                                                    <input type="text" name="kode" value="<?= $k['kode_bayar']; ?>" hidden>
                                                     <div class="confirm">
-                                                        <span>Paket 10</span>
-                                                        <h1 class="bold-lg"><sup>Rp</sup> 25.000</h1>
-                                                        <ul>
-                                                            <li>Gratis 3 voucher</li>
-                                                            <li>Tiap voucher tayang 30 hari di ternakbagus.com</li>
-                                                        </ul>
+                                                        <span><?= $k['nama_paket'] ?></span>
+                                                        <h1 class="bold-lg"><sup>Rp</sup> <?= format_rupiah($k['harga_paket']); ?></h1>
+                                                        <?= $k['desc_paket']; ?>
                                                     </div>
                                                     <h2 class="f-18">DATA DIRI</h2>
                                                     <div class="form-group row">
@@ -125,17 +119,19 @@ if (isset($_SESSION['id'])) {
                                                     <div class="form-group row">
                                                         <label for="staticEmail" class="col-sm-4 col-form-label">Jumlah</label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" class="form-control form-control-sm" name="jumlah">
+                                                            <input type="text" class="form-control form-control-sm" name="jumlah" value="<?= $k['harga_paket']; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="inputPassword" class="col-sm-4 col-form-label">Bank Tujuan</label>
                                                         <div class="col-sm-8">
                                                             <select id="inputState" class="form-control form-control-sm" name="tujuan">
-                                                                <option>BANK MANDIRI - 9034343432</option>
-                                                                <option>BANK BCA - 9034343432</option>
-                                                                <option>BANK BRI - 9034343432</option>
-                                                                <option>BANK BNI - 9034343432</option>
+                                                                <?php
+                                                                $bank = $wpdb->get_results("SELECT * FROM wp_bank", ARRAY_A);
+                                                                foreach ($bank as $b) {
+                                                                    echo "<option value='$b[nama_bank] $b[norekening]'>$b[nama_bank] $b[norekening]</option>";
+                                                                }
+                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>

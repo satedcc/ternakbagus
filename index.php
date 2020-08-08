@@ -97,9 +97,19 @@ if ($_SESSION['id'] == "") {
                         <span>PROMO<br>Join Member</span>
                     </div>
                     <h2 class="f-18 bold-md mt-4">Ingin jual ternak dengan cepat ?</h2>
-                    <div class="iklan-button my-3">
+                    <?php
+                    if ($_SESSION['id'] == "") {
+                        echo '<a href="" class="iklan-button my-3" data-toggle="modal" data-target="#iklan-bottom">
                         <i class="far fa-bell mr-2"></i> Pasang Iklan
-                    </div>
+                    </a>';
+                    } else {
+                        echo '<a href="ternak/" class="iklan-button my-3">
+                        <i class="far fa-bell mr-2"></i> Pasang Iklan
+                    </a>';
+                    }
+
+                    ?>
+
                     <div class="form-main">
                         <h3 class="f-18">Sudah punya akun</h3>
                         <div class="main-input">
@@ -191,6 +201,7 @@ foreach ($kategori as $k) {
                                                                 WHERE kategori_id='" . $k['kategori_id'] . "'
                                                                 AND status='1'
                                                                 AND status_tayang='1'
+                                                                AND draft='N'
                                                                 GROUP BY wp_aads.add_id", ARRAY_A);
                         foreach ($result as $r) {
                             if ($r['kategori_iklan'] == "ternak") {

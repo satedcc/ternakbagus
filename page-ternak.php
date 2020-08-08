@@ -14,6 +14,8 @@ if (isset($_SESSION['id'])) {
         iklan_ternak();
     } elseif ($_POST['tombol'] == "edit") {
         editternak();
+    } elseif ($_POST['tombol'] == "draft") {
+        iklan_ternak();
     }
 
     get_header();
@@ -92,8 +94,31 @@ if (isset($_SESSION['id'])) {
                                     </div>
                                     <div class="form-input w-50">
                                         <label for="" class="bold-sm m-0 my-2">Umur</label>
-                                        <div class="input-text">
-                                            <input type="text" placeholder="umur hewan ternak" name="umur" required value="<?= $edit['umur']; ?>">
+                                        <div class="input-text d-flex">
+                                            <div class="mr-2"><input type="text" placeholder="umur hewan ternak" name="umur" required value="<?= $edit['umur']; ?>"></div>
+                                            <div>
+                                                <select name="satuan" id="">
+                                                    <?php
+                                                    if ($edit['satuan'] == "hari") {
+                                                        echo '<option value="hari" selected>Hari</option>
+                                                        <option value="bulan">Bulan</option>
+                                                        <option value="tahun">Tahun</option>';
+                                                    } elseif ($edit['satuan'] == "bulan") {
+                                                        echo '<option value="hari">Hari</option>
+                                                        <option value="bulan" selected>Bulan</option>
+                                                        <option value="tahun">Tahun</option>';
+                                                    } elseif ($edit['satuan'] == "tahun") {
+                                                        echo '<option value="hari">Hari</option>
+                                                        <option value="bulan">Bulan</option>
+                                                        <option value="tahun" selected>Tahun</option>';
+                                                    } else {
+                                                        echo '<option value="hari">Hari</option>
+                                                        <option value="bulan">Bulan</option>
+                                                        <option value="tahun" selected>Tahun</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-input w-50">
@@ -108,12 +133,25 @@ if (isset($_SESSION['id'])) {
                                             <textarea id="" placeholder="keterangan" name="ket" cols="20"><?= $edit['keterangan']; ?></textarea>
                                         </div>
                                     </div>
+                                    <?php
+                                    if ($edit['lokasi'] != "") {
+                                    ?>
+                                        <div class="form-input w-50">
+                                            <label for="" class="bold-sm m-0 my-2">Lokasi Saat ini</label>
+                                            <div class="input-text">
+                                                <input type="text" name="id_lokasi" required value="<?= $lokasi['id_kec']; ?>" hidden>
+                                                <input type="text" name="lokasi_sekarang" required value="<?= $lokasi['nama_kec']; ?>" readonly>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
                                     <div class="form-input">
                                         <label for="" class="bold-sm m-0 my-2">Provinsi *</label>
                                         <div class="input-text">
                                             <!--provinsi-->
                                             <select id="provinsi" class="form-control" name="provinsi">
-                                                <option value="">Pilih provinsi</option>
+                                                <option value="" class="judul_select"> - Pilih provinsi - </option>
                                                 <?php
                                                 $prov = $wpdb->get_results("SELECT * FROM provinsi ORDER BY nama", ARRAY_A);
                                                 foreach ($prov as $p) { ?>
@@ -131,7 +169,7 @@ if (isset($_SESSION['id'])) {
                                         <div class="input-text">
                                             <!--Kabupaten-->
                                             <select id="kota" class="form-control" name="kota">
-                                                <option value="">Pilih kabupaten</option>
+                                                <option value="" class="judul_select"> - Pilih kabupaten - </option>
                                                 <?php
                                                 $query = $wpdb->get_results("SELECT kabupaten.nama AS nama_kab, provinsi.id_prov, kabupaten.id_kab FROM kabupaten INNER JOIN provinsi ON kabupaten.id_prov = provinsi.id_prov order by nama_kab", ARRAY_A);
                                                 foreach ($query as $row) { ?>
@@ -149,7 +187,7 @@ if (isset($_SESSION['id'])) {
                                         <div class="input-text">
                                             <!--Kabupaten-->
                                             <select id="kecamatan" class="form-control" name="kecamatan">
-                                                <option value="">Pilih kecamatan</option>
+                                                <option value="" class="judul_select"> - Pilih kecamatan - </option>
                                                 <?php
                                                 $query = $wpdb->get_results("SELECT kecamatan.nama AS nama_kec, kabupaten.id_kab, kecamatan.id_kec FROM kecamatan INNER JOIN kabupaten ON kecamatan.id_kab = kabupaten.id_kab order by nama_kec", ARRAY_A);
                                                 foreach ($query as $row) { ?>
@@ -243,8 +281,8 @@ if (isset($_SESSION['id'])) {
                                                             Saldo voucher anda tidak cukup untuk memasang iklan, silahkan membeli voucher terlebih dahulu.
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                                             <a href="beli/" type="button" class="btn btn-primary">Beli voucher</a>
+                                                            <button type="submit" class="btn btn-outline-primary" name='tombol' value='draft'>Simpan Iklan</button>
                                                         </div>
                                                     </div>
                                                 <?php

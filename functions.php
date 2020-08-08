@@ -111,6 +111,11 @@ function textToSlug($text = '')
 
 function iklan_ternak()
 {
+    if ($_POST['tombol'] == "draft") {
+        $draft = "Y";
+    } else {
+        $draft = "N";
+    }
     global $wpdb;
     $date               = date('Y-m-d H:i:s');
     $table              = "wp_aads";
@@ -123,6 +128,7 @@ function iklan_ternak()
         'judul'          => $_POST['judul'],
         'umur'           => $_POST['umur'],
         'berat'          => $_POST['berat'],
+        'satuan'         => $_POST['satuan'],
         'harga'          => $_POST['harga'],
         'keterangan'     => $_POST['ket'],
         'kategori_id'    => $_POST['kategori'],
@@ -130,7 +136,8 @@ function iklan_ternak()
         'lokasi'         => $_POST['kecamatan'],
         'member_id'      => $_SESSION['member'],
         'status'         => "0",
-        'status_tayang'   => "1",
+        'status_tayang'  => "1",
+        'draft'          => $draft,
         'ads_create'     => $date,
         'ads_update'     => $date
     );
@@ -173,7 +180,11 @@ function iklan_ternak()
 
                 );
                 $cek = $wpdb->insert($images, $data, $format);
-                header('location:../detail/?success=1&id=' . $idads);
+                if ($_POST['tombol'] == "draft") {
+                    header('location:../detail/?success=2&id=' . $idads);
+                } else {
+                    header('location:../detail/?success=1&id=' . $idads);
+                }
             }
         }
     }
@@ -182,6 +193,11 @@ function iklan_ternak()
 function editternak()
 {
 
+    if ($_POST['kecamatan'] == "") {
+        $lokasi = $_POST['id_lokasi'];
+    } else {
+        $lokasi = $_POST['kecamatan'];
+    }
     $jumlahInput        = count($_POST['images']);
 
     global $wpdb;
@@ -194,13 +210,13 @@ function editternak()
         'judul'          => $_POST['judul'],
         'umur'           => $_POST['umur'],
         'berat'          => $_POST['berat'],
+        'satuan'         => $_POST['satuan'],
         'harga'          => $_POST['harga'],
         'keterangan'     => $_POST['ket'],
         'kategori_id'    => $_POST['kategori'],
         'sub_id'         => $_POST['jenis'],
-        'lokasi'         => $_POST['kecamatan'],
+        'lokasi'         => $lokasi,
         'member_id'      => $_SESSION['member'],
-        'status'         => "0",
         'ads_update'     => $date
     );
 
@@ -209,7 +225,6 @@ function editternak()
     );
 
     $cek = $wpdb->update($table, $data, $condition);
-    header("location:../detail/?alert=berhasil");
 
     $limit              = 10 * 1024 * 1024;
     $ekstensi           = array('png', 'jpg', 'jpeg', 'gif');
@@ -231,6 +246,8 @@ function editternak()
                 if (!in_array($tipe_file, $ekstensi)) {
                     header("location:../ternak/?alert=gagal_ektensi");
                 } else {
+                    echo "<script>alert('$sate')</script>";
+
                     move_uploaded_file($tmp, $path);
                     $namarandom = date('dmY-His') . '-' . $namafile;
                     $data = array(
@@ -392,7 +409,7 @@ function edit_perlengkapan()
     );
 
     $cek = $wpdb->update($table, $data, $condition);
-    header("location:../detail/?alert=berhasil");
+    //header("location:../detail/?alert=berhasil");
 
     $limit              = 10 * 1024 * 1024;
     $ekstensi           = array('png', 'jpg', 'jpeg', 'gif');
@@ -528,7 +545,7 @@ function editlayanan()
     );
 
     $cek = $wpdb->update($table, $data, $condition);
-    header("location:../detail/?alert=berhasil");
+    //header("location:../detail/?alert=berhasil");
 
     $limit              = 10 * 1024 * 1024;
     $ekstensi           = array('png', 'jpg', 'jpeg', 'gif');
@@ -590,6 +607,33 @@ function use_voucher()
         'add_id'        => $_POST['iklan']
     );
     $cektayang = $wpdb->update($tayang, $datatayang, $conditiontayang);
+    header('location:google.com');
+}
+
+function use_draft()
+{
+    global $wpdb;
+    $date               = date('Y-m-d H:i:s');
+    $table              = "wp_use";
+    $data               = array(
+        'member_id'     => $_SESSION['member'],
+        'qty'           => 1,
+        'create_use'    => $date
+    );
+    $cek = $wpdb->insert($table, $data, $format);
+
+    $tayang             = "wp_aads";
+    $datatayang         = array(
+        'draft'         => "N",
+        'tgl_tayang'    => $date
+    );
+    $conditiontayang    = array(
+        'add_id'        => $_POST['iklan']
+    );
+    $cektayang = $wpdb->update($tayang, $datatayang, $conditiontayang);
+    if ($cektayang) {
+        header('location:../detail/?success=1&id=' . $_POST['iklan']);
+    }
 }
 
 function cek_input($data)
@@ -802,6 +846,7 @@ function konfirmasi()
         $cek = $wpdb->insert($table, $data, $format);
 
         if ($cek) {
+            include "assets/PHPMailer/konfirmasi.php";
             header('location:history/?status=1');
         } else {
             header('location:history/?status=0');
@@ -816,7 +861,6 @@ function konfirmasi()
 function changepassword()
 {
     global $wpdb;
-    $date               = date('Y-m-d H:i:s');
     $table              = "wp_members";
 
     if ($_POST['password'] != $_POST['konfirmasi']) {

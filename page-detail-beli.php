@@ -5,6 +5,9 @@ date_default_timezone_set('Asia/Jakarta');
 
 if (isset($_SESSION['id'])) {
 
+    $p = $wpdb->get_row("SELECT * FROM wp_paket WHERE paket_id='" . $_POST['paket'] . "'", ARRAY_A);
+    $voucher = $p['paket_voucher'] * $p['harga_voucher'];
+
     if ($_POST['paket'] == "1") {
         $jumlah  = 1;
         $harga   = 2500;
@@ -70,7 +73,7 @@ if (isset($_SESSION['id'])) {
                                                 <td class="text-right">
                                                     <div class="paket">
                                                         <input type="text" name="paket" value="<?= $_POST['paket']; ?>" hidden>
-                                                        <?php echo $keterangan; ?>
+                                                        <?php echo "$p[nama_paket]  $p[desc_paket]"; ?>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -80,11 +83,11 @@ if (isset($_SESSION['id'])) {
                                             </tr>
                                             <tr>
                                                 <td>Jumlah</td>
-                                                <td class="text-right"><input type="text" value="<?= $jumlah; ?>" class="voucher-input" name="jumlah" readonly></td>
+                                                <td class="text-right"><input type="text" value="<?= $p['paket_voucher']; ?>" class="voucher-input" name="jumlah" readonly></td>
                                             </tr>
                                             <tr>
                                                 <td>Total Harga</td>
-                                                <td class="text-right">Rp. <?php echo format_rupiah($harga); ?></td>
+                                                <td class="text-right">Rp. <?php echo format_rupiah($p['harga_paket']); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>Diskon</td>
@@ -102,16 +105,20 @@ if (isset($_SESSION['id'])) {
                                             </tr>
                                             <tr class="f-20 bold-md">
                                                 <td>Total</td>
-                                                <td class="text-right">Rp. <?php echo format_rupiah($harga); ?></td>
+                                                <td class="text-right">Rp. <?php echo format_rupiah($p['harga_paket']); ?></td>
                                             </tr>
                                             <tr class="f-18">
                                                 <td>Metode Pembayaran</td>
                                                 <td class="text-right">
                                                     <span>Transfer</span>
                                                     <input type="text" name="bank" id="" value="<?= $_POST['bank']; ?>" hidden>
-                                                    <h3 class="f-20 bold-md m-0">BANK <?= $_POST['bank']; ?></h3>
-                                                    <h4 class="f-18 m-0">Rek. 90232323232</h4>
-                                                    <h5 class="f-18">Gunawan Dwijatmiko</h5>
+                                                    <?php
+                                                    $bank = $wpdb->get_row("SELECT * FROM wp_bank WHERE bank_id='" . $_POST['bank'] . "'", ARRAY_A);
+                                                    echo "<h3 class='f-20 bold-md m-0'>BANK $bank[nama_bank]</h3>
+                                                    <h4 class='f-18 m-0'>Rek. $bank[norekening]</h4>
+                                                    <h5 class='f-18'>$bank[nama_pemilik]</h5>";
+
+                                                    ?>
                                                 </td>
                                             </tr>
                                         </tbody>

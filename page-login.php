@@ -112,9 +112,18 @@ if ($_GET['success'] == "1") {
                         <span>Join Member</span>
                     </div>
                     <h2 class="f-18 bold-md mt-4">Ingin jual ternak dengan cepat ?</h2>
-                    <div class="iklan-button my-3">
+                    <?php
+                    if ($_SESSION['id'] == "") {
+                        echo '<a href="" class="iklan-button my-3" data-toggle="modal" data-target="#iklan-bottom">
                         <i class="far fa-bell mr-2"></i> Pasang Iklan
-                    </div>
+                    </a>';
+                    } else {
+                        echo '<a href="ternak/" class="iklan-button my-3">
+                        <i class="far fa-bell mr-2"></i> Pasang Iklan
+                    </a>';
+                    }
+
+                    ?>
                     <div class="form-main">
                         <h3 class="f-18">Sudah punya akun</h3>
                         <div class="main-input">
@@ -145,6 +154,25 @@ if ($_GET['success'] == "1") {
                         <span>Belum punya akun ? <a href="register">Daftar Sekarang</a></span>
                     </div>
                 </form>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="iklan-bottom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Anda belum login</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Silahkan Login atau Register terlebih dahulu untuk bisa beriklan atau melihat iklan di <span class="bold-md">ternakbagus.com</span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php
         }

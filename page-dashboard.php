@@ -117,6 +117,7 @@ if (isset($_SESSION['id'])) {
                                                                     LEFT JOIN wp_images on wp_aads.add_id=wp_images.add_id
                                                                     WHERE status='1'
                                                                     AND status_tayang='1'
+                                                                    AND draft='N'
                                                                     GROUP BY wp_aads.add_id
                                                                     LIMIT 15", ARRAY_A);
                             foreach ($result as $r) {

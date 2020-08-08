@@ -7,16 +7,19 @@
             <div class="row justify-content-between">
                 <div class="col-md-4">
                     <div class="logo">
-                        <h1 class="f-22">Ternakbagus.com</h1>
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci optio incidunt rerum.
-                            Ad repudiandae.</p>
+                        <h1 class="f-22">
+                            <a href="<?php echo get_site_url(); ?>">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="" class="mb-3">
+                            </a>
+                        </h1>
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis, quasi velit! Officiis explicabo voluptatem libero porro labore recusandae facilis mollitia totam animi magnam. Animi pariatur optio, harum quas consectetur consequuntur?</p>
                     </div>
-                    <ul class="info">
+                    <!-- <ul class="info">
                         <li><a href=""><i class="far fa-phone mr-2"></i>021-999-3333</a></li>
                         <li><a href=""><i class="far fa-map-marker-alt mr-2"></i>Jalan Kemerdekaan 10 Magelang</a>
                         </li>
                         <li><a href=""><i class="far fa-envelope mr-2"></i>info@ternakbagus.com</a></li>
-                    </ul>
+                    </ul> -->
                 </div>
                 <div class="col-md-2">
                     <div class="title-footer">
@@ -71,7 +74,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md">
-                    <span class="f-12">&copy; Copyright 2020. ternakbagus.com</span>
+                    <span class="f-12">&copy; Copyright 2020. Ternakbagus.com</span>
                 </div>
             </div>
         </div>
@@ -94,7 +97,7 @@ wp_footer();
         $(".like-btn").click(function() {
             var iklan = $(this).attr('id');
             $.ajax({
-                url: '<?= get_template_directory_uri(); ?>/like.php',
+                url: '<?= get_site_url(); ?>/like.php',
                 method: 'POST',
                 data: {
                     iklan: iklan
@@ -116,7 +119,7 @@ wp_footer();
             var status = "inputpesan";
 
             $.ajax({
-                url: '<?= get_template_directory_uri(); ?>/like.php',
+                url: '<?= get_site_url(); ?>/like.php',
                 method: 'POST',
                 data: {
                     pesan: pesan,
@@ -143,7 +146,7 @@ wp_footer();
             var status = "inputawar";
 
             $.ajax({
-                url: '<?= get_template_directory_uri(); ?>/like.php',
+                url: '<?= get_site_url(); ?>/like.php',
                 method: 'POST',
                 data: {
                     tawar: tawar,
@@ -164,6 +167,17 @@ wp_footer();
 <script type="text/javascript">
     $(window).on('load', function() {
         $('#konfirmasiRegister').modal('show');
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $(".carousel-item:first").addClass('active');
+    });
+
+    $(document).on('click', 'img.gambar', function() {
+        $(this).addClass("utama").siblings().removeClass("utama");
+        //$(this).remove();
+
     });
 </script>
 </body>

@@ -103,7 +103,7 @@ function previewImages() {
 
         // Make sure `file.name` matches our extensions criteria
         if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
-            return alert(file.name + " is not an image");
+            return alert(file.name + " bukan sebuag gambar (*.jpg, *.JPEG, *.png)");
         } // else...
 
         var reader = new FileReader();
@@ -111,6 +111,7 @@ function previewImages() {
         reader.addEventListener("load", function () {
             var image = new Image();
             image.height = 130;
+            image.className = "gambar";
             image.title = file.name;
             image.src = this.result;
             preview.appendChild(image);

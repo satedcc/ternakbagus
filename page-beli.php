@@ -26,7 +26,22 @@ if (isset($_SESSION['id'])) {
                             <h1 class="f-18">Pilih paket: </h1>
                             <form action="../detail-beli/" method="post">
                                 <div class="voucher-package">
-                                    <div>
+                                    <?php
+                                    $paket = $wpdb->get_results("SELECT * FROM wp_paket", ARRAY_A);
+                                    foreach ($paket as $p) {
+                                    ?>
+                                        <div>
+                                            <input type="radio" name="paket" id="paket-<?= $p['paket_id']; ?>" value="<?= $p['paket_id']; ?>">
+                                            <label for="paket-<?= $p['paket_id']; ?>">
+                                                <h3 class="f-14 bold-md">Paket <?= $p['paket_id']; ?></h3>
+                                                <h1 class="bold-xl f-30">Rp.<?= format_rupiah($p['harga_paket']); ?></h1>
+                                                <?= $p['desc_paket']; ?>
+                                            </label>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                    <!-- <div>
                                         <input type="radio" name="paket" id="paket" value="1">
                                         <label for="paket">
                                             <h3 class="f-14 bold-md">Paket 1</h3>
@@ -57,7 +72,7 @@ if (isset($_SESSION['id'])) {
                                                 <li>Masa tayang iklan 30 hari per voucher</li>
                                             </ul>
                                         </label>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="d-md-flex">
                                     <div class="w-100 m-2">
@@ -75,10 +90,12 @@ if (isset($_SESSION['id'])) {
                                             <span>Pilih Bank</span>
                                             <div>
                                                 <select id="" class="w-100 form-control" name="bank">
-                                                    <option value="MANDIRI">BANK MANDIRI - 9000023232</option>
-                                                    <option value="BCA">BANK BCA - 9000023232</option>
-                                                    <option value="BRI">BANK BNI - 9000023232</option>
-                                                    <option value="BNI">BANK BRI - 9000023232</option>
+                                                    <?php
+                                                    $bank = $wpdb->get_results("SELECT * FROM wp_bank", ARRAY_A);
+                                                    foreach ($bank as $b) {
+                                                        echo "<option value='$b[bank_id]'>$b[nama_bank] $b[norekening]</option>";
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                         </div>

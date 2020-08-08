@@ -12,6 +12,8 @@ if (isset($_SESSION['id'])) {
 
     if ($_POST['tombol'] == "save") {
         use_voucher();
+    } elseif ($_POST['tombol'] == "draft") {
+        use_draft();
     }
 
     get_header();
@@ -32,6 +34,10 @@ if (isset($_SESSION['id'])) {
                                 <p>Iklan anda BERHASIL di buat dan dalam proses MODERASI. Anda akan mendapatkan notifikasi ketika iklan telah aktif.
                                 Kami mendoakan semoga iklan Anda cepat laku.</p>
                                 <a href='view/?id=$_GET[id]' target='New' class='myButton'>Preview Iklan Anda</a>
+                            </div>";
+                    } elseif ($_GET['success'] == 2) {
+                        echo "<div class='alert alert-success' role='alert'>
+                                <p>Iklan telah berhasil di simpan sebagai draf, mohon untuk membeli voucher terlebih dahulu untuk mengaktifkan kembali iklan anda.</p>
                             </div>";
                     } elseif ($_GET['alert'] == "berhasil") {
                         echo "<div class='alert alert-success' role='alert'>
@@ -62,16 +68,24 @@ if (isset($_SESSION['id'])) {
                                         $status = "<span class='py-2 px-3 bg-warning text-white rounded'>Moderasi</span>";
                                         break;
                                 }
+                                switch ($r['draft']) {
+                                    case 'Y':
+                                        $draft = '<div class="draft">
+                                        <button class="btn btn-info btn-sm mt-3" data-toggle="modal" data-target="#draftModal' . $r['add_id'] . '">Aktifkan Iklan</button></p>
+                                                    </div>';
+                                        break;
+                                }
 
 
 
                             ?>
                                 <div class="col-md-6">
                                     <div class="content-utama">
+                                        <?= $draft; ?>
                                         <div class="iklan-header p-3">
                                             <div class="row justify-content-between">
                                                 <div class="col-8 titledetail">
-                                                    <h1 class="f-18 bold-sm"><?= $r['judul']; ?></h1>
+                                                    <h1 class="f-18 bold-sm"><a href="../view/?id=<?= $r['add_id']; ?>" target="new" class="text-primary"><?= $r['judul']; ?></a></h1>
                                                     <span class="f-12"><i class="far fa-map-marker-alt mr-2"></i><?= $r['nama']; ?> &middot; <span class="text-secondary"><?= time_ago($r['ads_create']); ?></span></span>
                                                 </div>
                                                 <div class="col-auto">
@@ -208,6 +222,60 @@ if (isset($_SESSION['id'])) {
                                                         <input type="text" name="iklan" value="<?= $r['add_id']; ?>" hidden>
                                                         <input type="text" name="member" value="<?= $_SESSION['member']; ?>" hidden>
                                                         <button type="submit" class="btn btn-primary" name='tombol' value='save'>Ya</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Konfirmasi pemasangan iklan</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Saldo voucher anda tidak cukup untuk memasang iklan, silahkan membeli voucher terlebih dahulu.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                    <a href="beli/" type="button" class="btn btn-primary">Beli voucher</a>
+                                                </div>
+                                            </div>
+                                        <?php
+                                        }
+                                        ?>
+
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="draftModal<?= $r['add_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <?php
+                                        $voucher = $wpdb->get_var("SELECT SUM(jumlah) AS total FROM wp_vouchers WHERE member_id='" . $_SESSION['id_member'] . "' AND status_bayar='1'");
+                                        $use = $wpdb->get_var("SELECT SUM(qty) AS total FROM wp_use WHERE member_id='" . $_SESSION['id_member'] . "'");
+                                        $total = $voucher - $use;
+                                        if ($total > 0) {
+
+                                        ?>
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Aktifkan iklan</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Anda akan mengaktifkan kembali iklan dengan menggunakan 1 voucher dan saldo voucher saat ini <span class="bold-xl"><?= $total; ?></span>. Apakah anda yakin untuk memasang iklan ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                    <form action="" method="post">
+                                                        <input type="text" name="iklan" value="<?= $r['add_id']; ?>" hidden>
+                                                        <input type="text" name="member" value="<?= $_SESSION['member']; ?>" hidden>
+                                                        <button type="submit" class="btn btn-primary" name='tombol' value='draft'>Ya</button>
                                                     </form>
                                                 </div>
                                             </div>

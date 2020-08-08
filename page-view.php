@@ -8,7 +8,8 @@ if (isset($_SESSION['id'])) {
                                     LEFT JOIN wp_kategories ON wp_aads.kategori_id=wp_kategories.kategori_id
                                     LEFT JOIN wp_subs ON wp_aads.sub_id=wp_subs.sub_id
                                     LEFT JOIN wp_members ON wp_aads.member_id=wp_members.member_id
-                                    WHERE  add_id='" . $_GET['id'] . "'", ARRAY_A);
+                                    WHERE  add_id='" . $_GET['id'] . "'
+                                    AND draft='N'", ARRAY_A);
 
     $lokasi = $wpdb->get_row("SELECT id_prov,id_kab,id_kec, provinsi.nama AS nama_prov, kabupaten.nama AS nama_kab, kecamatan.nama AS nama_kec FROM provinsi LEFT JOIN kabupaten using (id_prov) 
                                     LEFT JOIN kecamatan USING (id_kab)
@@ -30,11 +31,11 @@ if (isset($_SESSION['id'])) {
                             <?php
                             $photo = $wpdb->get_results("SELECT * FROM wp_images WHERE add_id='" . $ads['add_id'] . "'", ARRAY_A);
                             foreach ($photo as $p) {
-                                echo "<div class='photo-item' data-toggle='modal' data-target='#imgproduct-$p[image_id]'>
+                                echo "<div class='photo-item' data-toggle='modal' data-target='#imgproduct'>
                                 <img src='../wp-content/uploads/$ads[slug_nama]/$p[img_desc]' alt=''>
                                         </div>";
                             ?>
-                                <div class="modal fade" id="imgproduct-<?= $p['image_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="imgproduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -44,9 +45,33 @@ if (isset($_SESSION['id'])) {
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <?php
-                                                echo "<img src='../wp-content/uploads/$ads[slug_nama]/$p[img_desc]' alt=''>";
-                                                ?>
+                                                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                                    <ol class="carousel-indicators">
+                                                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                                    </ol>
+                                                    <div class="carousel-inner">
+                                                        <?php
+                                                        $photox = $wpdb->get_results("SELECT * FROM wp_images WHERE add_id='" . $ads['add_id'] . "'", ARRAY_A);
+                                                        foreach ($photox as $px) {
+                                                            echo "
+                                                            <div class='carousel-item'>
+                                                                <img src='../wp-content/uploads/$ads[slug_nama]/$px[img_desc]' class='d-block w-100' alt='...'>
+                                                            </div>";
+                                                        }
+                                                        ?>
+
+                                                    </div>
+                                                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -74,7 +99,7 @@ if (isset($_SESSION['id'])) {
                         ?>
                             <div>
                                 <h2 class="f-18">Umur</h2>
-                                <span class="text-secondary"><?= $ads['umur']; ?></span>
+                                <span class="text-secondary"><?= $ads['umur']; ?> <?= $ads['satuan']; ?></span>
                             </div>
                             <div>
                                 <h2 class="f-18">Berat</h2>

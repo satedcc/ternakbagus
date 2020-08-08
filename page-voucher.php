@@ -11,7 +11,7 @@ if (isset($_SESSION['id'])) {
         $table = "wp_vouchers";
         $data  = array(
             'member_id'     => $_SESSION['member'],
-            'v_paket'       => "4",
+            'v_paket'       => "2",
             'jumlah'        => "4",
             'kode_bayar'    => "promo",
             'bank'          => "promo",
@@ -93,7 +93,7 @@ if (isset($_SESSION['id'])) {
                             <h1 class="f-20 bold-md">VOUCHER ANDA</h1>
                             <div class="py-5">
                                 <div class="box">
-                                    <div class="ribbon ribbon-top-left"><span>Voucer</span></div>
+                                    <div class="ribbon ribbon-top-left"><span>Voucher</span></div>
                                     <div class="voucher">
                                         <div class="item-voucher">
                                             <?php
